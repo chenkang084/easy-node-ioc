@@ -1,5 +1,5 @@
 {
-  "name": "easy-ioc",
+  "name": "@chenkang084/easy-ioc",
   "version": "1.0.0",
   "description": "Typescript IOC Tool",
   "main": "dist/index.js",
