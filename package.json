@@ -2,12 +2,15 @@
   "name": "easy-ioc",
   "version": "1.0.0",
   "description": "Typescript IOC Tool",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "chenkang084@163.com",
   "license": "ISC",
+  "files": [
+    "dist/"
+  ],
   "devDependencies": {
     "reflect-metadata": "^0.1.13",
     "ts-node": "^8.1.0",
