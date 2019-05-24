@@ -1,0 +1,18 @@
+{
+  "name": "easy-ioc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "reflect-metadata": "^0.1.13",
+    "ts-node": "^8.1.0",
+    "tslint": "^5.15.0",
+    "typescript": "^3.4.5"
+  },
+  "dependencies": {}
+}

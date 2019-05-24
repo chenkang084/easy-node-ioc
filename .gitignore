@@ -1,0 +1,13 @@
+node_modules
+dist
+build
+.idea
+.vscode/
+#public
+src/config/config.dev.ts
+static/*.js
+# static/*.html
+# static/*.ico
+logs
+
+package-lock.json
