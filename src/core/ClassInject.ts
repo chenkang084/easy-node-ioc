@@ -1,4 +1,5 @@
 import { classMap } from './Bootstrap';
+import logger from '../utils/logger';
 
 /**
  * add class constructor to classMap
@@ -9,7 +10,7 @@ function Injectable() {
     const targetName = target.name;
     // TODO class name duplicate
     if (!classMap.has(targetName)) {
-      console.log(`=====inject ${targetName}=====`);
+      logger.info(`=====inject ${targetName}=====`);
       classMap.set(targetName, target);
     }
   };

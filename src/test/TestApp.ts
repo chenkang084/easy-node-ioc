@@ -1,14 +1,17 @@
-import { Bootstrap } from '../core/Bootstrap';
-import { Autowired } from '../core/PropInject';
+import { Bootstrap, Autowired } from '../';
 import TestControl from './TestController';
+import TestService from './TestService';
 
 @Bootstrap
 class MyApp {
   @Autowired
-  testControl: TestControl;
+  private testControl: TestControl;
+  @Autowired
+  private testService: TestService;
 
   main() {
     console.log('start app');
     this.testControl.testService.query();
+    this.testService.query();
   }
 }

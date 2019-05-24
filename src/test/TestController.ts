@@ -8,7 +8,7 @@ export default class TestControl {
   testService: TestService;
 
   constructor(test: string) {
-    console.log('TestControl');
+    console.log('constructor TestControl');
     // this.service.query();
   }
 
