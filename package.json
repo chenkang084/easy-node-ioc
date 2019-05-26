@@ -1,14 +1,20 @@
 {
-  "name": "easy-ioc",
+  "name": "@chenkang084/easy-ioc",
   "version": "1.0.0",
   "description": "Typescript IOC Tool",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "tsc"
   },
   "author": "chenkang084@163.com",
   "license": "ISC",
+  "files": [
+    "dist/"
+  ],
   "devDependencies": {
+    "@types/express": "^4.16.1",
+    "express": "^4.17.0",
     "reflect-metadata": "^0.1.13",
     "ts-node": "^8.1.0",
     "tslint": "^5.15.0",
