@@ -12,7 +12,7 @@ const logger = {
   },
   info: (...args: any[]) => {
     if (env === 'development') {
-      args.unshift('logger:');
+      args.unshift('easy-ioc:');
       console.info.apply(console, args);
     }
   }

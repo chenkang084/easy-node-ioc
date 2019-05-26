@@ -1,17 +1,24 @@
 import { Bootstrap, Autowired } from '../';
-import TestControl from './TestController';
-import TestService from './TestService';
+import TestControl from './Controller';
+import express = require('express');
+import http = require('http');
 
 @Bootstrap
-class MyApp {
+class App {
   @Autowired
-  private testControl: TestControl;
-  @Autowired
-  private testService: TestService;
+  testControl: TestControl;
 
   main() {
-    console.log('start app');
-    this.testControl.testService.query();
-    this.testService.query();
+    const app = express();
+    app.get('/index', this.testControl.index);
+
+    const server = http.createServer(app);
+
+    server.listen(9001, function() {
+      // const host = server.address().address;
+      // const port = server.address().port;
+
+      console.log('Example app listening at http://%s:%s');
+    });
   }
 }
