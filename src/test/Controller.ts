@@ -18,6 +18,12 @@ export default class TestControl {
     res.status(200).send(this.testService.queryDb());
   };
 
+  index2(req: Request, res: Response, next: NextFunction) {
+    console.log('index method');
+    this.dbService.queryDb();
+    res.status(200).send(this.testService.queryDb());
+  }
+
   test() {
     console.log('control test method');
   }
