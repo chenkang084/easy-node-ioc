@@ -11,6 +11,14 @@ function recurInject(target: any) {
   const targetInstance = new target();
   logger.info(`instantiate ${target.name}`);
 
+  // bind runtime this for prototype method
+  Object.getOwnPropertyNames(targetInstance.__proto__)
+    .filter((prop: string) => prop !== 'constructor')
+    .forEach((prop: string) => {
+      const method = targetInstance.__proto__[prop];
+      targetInstance.__proto__[prop] = method.bind(targetInstance);
+    });
+
   // get the dependance of target
   const depends = Reflect.getOwnMetadataKeys(target).filter(
     (meta: string) => meta !== 'design:paramtypes'

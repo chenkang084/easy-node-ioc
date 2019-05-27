@@ -11,6 +11,7 @@ class App {
   main() {
     const app = express();
     app.get('/index', this.testControl.index);
+    app.get('/index2', this.testControl.index2);
 
     const server = http.createServer(app);
 
