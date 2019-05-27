@@ -9,6 +9,12 @@ exports.classMap = new Map();
 function recurInject(target) {
     const targetInstance = new target();
     logger_1.default.info(`instantiate ${target.name}`);
+    Object.getOwnPropertyNames(targetInstance.__proto__)
+        .filter((prop) => prop !== 'constructor')
+        .forEach((prop) => {
+        const method = targetInstance.__proto__[prop];
+        targetInstance.__proto__[prop] = method.bind(targetInstance);
+    });
     const depends = Reflect.getOwnMetadataKeys(target).filter((meta) => meta !== 'design:paramtypes');
     depends.forEach((depClass) => {
         if (depClass.match(Constants_1.autowired_reg)) {
