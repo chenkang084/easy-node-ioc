@@ -1,4 +1,4 @@
-import { Bootstrap, Autowired } from '../';
+import { Bootstrap, Autowired, controlSet } from '../';
 import TestControl from './Controller';
 import express = require('express');
 import http = require('http');
@@ -8,12 +8,15 @@ class App {
   @Autowired
   testControl: TestControl;
 
-  main() {
-    const app = express();
-    app.get('/index', this.testControl.index);
-    app.get('/index2', this.testControl.index2);
+  app = express();
 
-    const server = http.createServer(app);
+  main() {
+    // const app = this.app;
+
+    // app.get('/index', this.testControl.index);
+    // app.get('/index2', this.testControl.index2);
+
+    const server = http.createServer(this.app);
 
     server.listen(9001, function() {
       // const host = server.address().address;
