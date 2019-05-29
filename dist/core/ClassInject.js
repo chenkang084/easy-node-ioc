@@ -1,14 +1,12 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-const tslib_1 = require("tslib");
-const Bootstrap_1 = require("./Bootstrap");
-const logger_1 = tslib_1.__importDefault(require("../utils/logger"));
-function Injectable() {
+require("reflect-metadata");
+const Constants_1 = require("./Constants");
+function Injectable(path) {
     return (target) => {
         const targetName = target.name;
-        if (!Bootstrap_1.classMap.has(targetName)) {
-            logger_1.default.info(`=====inject ${targetName}=====`);
-            Bootstrap_1.classMap.set(targetName, target);
+        if (path) {
+            Reflect.defineMetadata(Constants_1.CONTROL, path, target);
         }
     };
 }
@@ -21,7 +19,7 @@ function Service() {
 }
 exports.Service = Service;
 function Controller(path) {
-    return Injectable();
+    return Injectable(path);
 }
 exports.Controller = Controller;
 //# sourceMappingURL=ClassInject.js.map

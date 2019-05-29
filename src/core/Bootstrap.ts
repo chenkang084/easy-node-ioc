@@ -1,10 +1,16 @@
 import 'reflect-metadata';
-import { autowired_reg } from './Constants';
+import {
+  autowired_reg,
+  control_reg,
+  restful_reg,
+  CONTROL,
+  RestfulMethodType
+} from './Constants';
 import logger from '../utils/logger';
 
 export const iocContainer = new WeakMap();
-// export const iocContainer = new Map();
-export const classMap = new Map<any, any>();
+export const controlSet = new Set();
+// export const restfulMap = new Map<any, any>();
 
 function recurInject(target: any) {
   // instantiate target
@@ -12,16 +18,20 @@ function recurInject(target: any) {
   logger.info(`instantiate ${target.name}`);
 
   // bind runtime this for prototype method
-  Object.getOwnPropertyNames(targetInstance.__proto__)
-    .filter((prop: string) => prop !== 'constructor')
-    .forEach((prop: string) => {
-      const method = targetInstance.__proto__[prop];
-      targetInstance.__proto__[prop] = method.bind(targetInstance);
-    });
+  // Object.getOwnPropertyNames(targetInstance.__proto__)
+  //   .filter((prop: string) => prop !== 'constructor')
+  //   .forEach((prop: string) => {
+  //     const method = targetInstance.__proto__[prop];
+  //     targetInstance.__proto__[prop] = method.bind(targetInstance);
+  //   });
 
   // get the dependance of target
   const depends = Reflect.getOwnMetadataKeys(target).filter(
-    (meta: string) => meta !== 'design:paramtypes'
+    (meta: string) =>
+      // ['design:paramtypes', restful_reg].filter((type: RegExp) =>
+      //   meta.match(type)
+      // ).length === 0
+      'design:paramtypes' !== meta
   );
 
   // iterator dependance
@@ -43,6 +53,10 @@ function recurInject(target: any) {
       targetInstance[prop] = depInstance;
       logger.info(` add prop [${prop}]: to ${target.name}`);
     }
+
+    if (depClass.match(control_reg)) {
+      controlSet.add(target);
+    }
   });
 
   // inject instance to container
@@ -61,11 +75,37 @@ export function Bootstrap(target: any) {
 
   recurInject(target);
 
+  // console.log(controlSet);
+
   // instantiate app class
-  const app = iocContainer.get(target);
+  const expressInstance = iocContainer.get(target);
 
-  logger.info(' tool instantaiate all class completely.');
+  // loop all control class
+  for (const control of controlSet) {
+    // get control instance
+    const controlInstance = iocContainer.get(control);
+    // get instance's metas
+    const metas = Reflect.getMetadataKeys(controlInstance);
+    const controlPath = Reflect.getMetadata(CONTROL, control);
+    metas
+      .filter((meta: string) => meta.match(restful_reg))
+      .forEach((restful: string) => {
+        const restInfo = restful.split('@@');
+        const methodType = restInfo[2];
+        const methodPath = restInfo[3];
 
-  app.main();
+        const method = Reflect.getMetadata(restful, controlInstance);
+
+        logger.info(`easy-ioc inject controller:${control.name}`);
+
+        expressInstance.app[methodType as RestfulMethodType](
+          controlPath + methodPath,
+          method.value.bind(controlInstance)
+        );
+      });
+  }
+
+  logger.info('easy-ioc tool instantaiate all class completely.');
+
+  expressInstance.main();
 }
-

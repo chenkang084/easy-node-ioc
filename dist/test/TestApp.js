@@ -6,11 +6,11 @@ const Controller_1 = tslib_1.__importDefault(require("./Controller"));
 const express = require("express");
 const http = require("http");
 let App = class App {
+    constructor() {
+        this.app = express();
+    }
     main() {
-        const app = express();
-        app.get('/index', this.testControl.index);
-        app.get('/index2', this.testControl.index2);
-        const server = http.createServer(app);
+        const server = http.createServer(this.app);
         server.listen(9001, function () {
             console.log('Example app listening at http://%s:%s');
         });

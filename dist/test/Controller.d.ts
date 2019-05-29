@@ -5,7 +5,7 @@ export default class TestControl {
     constructor();
     testService: TestService;
     dbService: DbService;
-    index: (req: Request, res: Response, next: NextFunction) => void;
+    index(req: Request, res: Response, next: NextFunction): void;
     index2(req: Request, res: Response, next: NextFunction): void;
     test(): void;
 }
