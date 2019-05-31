@@ -6,4 +6,4 @@ export const autowired_reg = new RegExp(`^${AUTOWIRED}@@`);
 export const RESTFUL = '@@RESTFUL';
 export const restful_reg = new RegExp(`^${RESTFUL}`);
 
-export type RestfulMethodType = 'get';
+export type RestfulMethodType = 'get' | 'post' | 'put' | 'patch' | 'delete';
