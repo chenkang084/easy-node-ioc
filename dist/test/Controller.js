@@ -5,11 +5,15 @@ const __1 = require("../");
 const Service_1 = tslib_1.__importDefault(require("./Service"));
 const DbService_1 = tslib_1.__importDefault(require("./DbService"));
 const MethodInject_1 = require("../core/MethodInject");
+const ParametrDecorate_1 = require("../core/ParametrDecorate");
 let TestControl = class TestControl {
     constructor() {
+        this.test = () => {
+            console.log('control test method');
+        };
         this.index.bind(this);
     }
-    index(req, res, next) {
+    index(age, req, res) {
         console.log('index method');
         this.dbService.queryDb();
         res.status(200).send(this.testService.queryDb());
@@ -18,9 +22,6 @@ let TestControl = class TestControl {
         console.log('index method');
         this.dbService.queryDb();
         res.status(200).send(this.testService.queryDb());
-    }
-    test() {
-        console.log('control test method');
     }
 };
 tslib_1.__decorate([
@@ -33,8 +34,9 @@ tslib_1.__decorate([
 ], TestControl.prototype, "dbService", void 0);
 tslib_1.__decorate([
     MethodInject_1.Get('/index'),
+    tslib_1.__param(0, ParametrDecorate_1.RequestParam('age')),
     tslib_1.__metadata("design:type", Function),
-    tslib_1.__metadata("design:paramtypes", [Object, Object, Function]),
+    tslib_1.__metadata("design:paramtypes", [Number, Object, Object]),
     tslib_1.__metadata("design:returntype", void 0)
 ], TestControl.prototype, "index", null);
 tslib_1.__decorate([

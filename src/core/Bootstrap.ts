@@ -4,9 +4,17 @@ import {
   control_reg,
   restful_reg,
   CONTROL,
-  RestfulMethodType
+  RestfulMethodType,
+  RESTFUL
 } from './Constants';
 import logger from '../utils/logger';
+// import { Request, Response, NextFunction } from 'express';
+
+// interface ExpressHandle {
+//   req: Request;
+//   res: Response;
+//   next: NextFunction;
+// }
 
 export const iocContainer = new WeakMap();
 export const controlSet = new Set();
@@ -79,6 +87,7 @@ export function Bootstrap(target: any) {
 
   // instantiate app class
   const expressInstance = iocContainer.get(target);
+  const { app } = expressInstance;
 
   // loop all control class
   for (const control of controlSet) {
@@ -86,7 +95,35 @@ export function Bootstrap(target: any) {
     const controlInstance = iocContainer.get(control);
     // get instance's metas
     const metas = Reflect.getMetadataKeys(controlInstance);
+
+    const restfulMap = Reflect.getMetadata(RESTFUL, controlInstance);
     const controlPath = Reflect.getMetadata(CONTROL, control);
+
+    Object.getOwnPropertyNames(controlInstance.__proto__)
+      .filter(name => name !== 'constructor')
+      .forEach(methodName => {
+        const method = controlInstance[methodName];
+        const parameterMap = restfulMap.get(method);
+        const methodPath = parameterMap.get('path');
+        const parametersSet = parameterMap.get('parameters');
+        const methodType = parameterMap.get('methodType');
+
+        app[methodType](
+          controlPath + methodPath,
+          (req: any, res: any, next: any) => {
+            const parametersVals = Array.from(parametersSet).map(
+              (param: string) => req.query[param]
+            );
+            method.apply(
+              controlInstance,
+              parametersVals.concat([req, res, next])
+            );
+          }
+        );
+
+        console.log();
+      });
+
     metas
       .filter((meta: string) => meta.match(restful_reg))
       .forEach((restful: string) => {
@@ -98,10 +135,12 @@ export function Bootstrap(target: any) {
 
         logger.info(`easy-ioc inject controller:${control.name}`);
 
-        expressInstance.app[methodType as RestfulMethodType](
-          controlPath + methodPath,
-          method.value.bind(controlInstance)
-        );
+        // expressInstance.app[methodType as RestfulMethodType](
+        //   controlPath + methodPath,
+        //   (req: any, res: any, next: any) => {
+        //     method.value.call(controlInstance, { req, res, next });
+        //   }
+        // );
       });
   }
 
