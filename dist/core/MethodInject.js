@@ -9,6 +9,7 @@ function Get(path) {
         const methodMap = common_1.getRestfulParameterMap(method, restfulMap);
         methodMap.set('path', path);
         methodMap.set('methodType', 'get');
+        methodMap.set('args', common_1.getFunctionParams(method).filter(arg => !['req', 'res', 'next'].includes(arg)));
         if (!restfulMap.has(method)) {
             restfulMap.set(method, methodMap);
         }

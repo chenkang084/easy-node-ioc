@@ -18,7 +18,7 @@ let TestControl = class TestControl {
         this.dbService.queryDb();
         res.status(200).send(this.testService.queryDb());
     }
-    index2(req, res, next) {
+    index2(id, age, req, res, next) {
         console.log('index method');
         this.dbService.queryDb();
         res.status(200).send(this.testService.queryDb());
@@ -40,9 +40,11 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:returntype", void 0)
 ], TestControl.prototype, "index", null);
 tslib_1.__decorate([
-    MethodInject_1.Get('/index2'),
+    MethodInject_1.Get('/index2/:id'),
+    tslib_1.__param(0, ParametrDecorate_1.PathVariable('id')),
+    tslib_1.__param(1, ParametrDecorate_1.RequestParam('age')),
     tslib_1.__metadata("design:type", Function),
-    tslib_1.__metadata("design:paramtypes", [Object, Object, Function]),
+    tslib_1.__metadata("design:paramtypes", [String, Number, Object, Object, Function]),
     tslib_1.__metadata("design:returntype", void 0)
 ], TestControl.prototype, "index2", null);
 TestControl = tslib_1.__decorate([

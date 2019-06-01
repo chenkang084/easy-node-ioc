@@ -44,22 +44,21 @@ function Bootstrap(target) {
             const method = controlInstance[methodName];
             const parameterMap = restfulMap.get(method);
             const methodPath = parameterMap.get('path');
-            const parametersSet = parameterMap.get('parameters');
+            const querySet = parameterMap.get('query');
+            const paramsSet = parameterMap.get('params');
             const methodType = parameterMap.get('methodType');
+            const args = parameterMap.get('args');
             app[methodType](controlPath + methodPath, (req, res, next) => {
-                const parametersVals = Array.from(parametersSet).map((param) => req.query[param]);
+                const parametersVals = args.map((arg) => {
+                    if (paramsSet.has(arg)) {
+                        return req.params[arg];
+                    }
+                    if (querySet.has(arg)) {
+                        return req.query[arg];
+                    }
+                });
                 method.apply(controlInstance, parametersVals.concat([req, res, next]));
             });
-            console.log();
-        });
-        metas
-            .filter((meta) => meta.match(Constants_1.restful_reg))
-            .forEach((restful) => {
-            const restInfo = restful.split('@@');
-            const methodType = restInfo[2];
-            const methodPath = restInfo[3];
-            const method = Reflect.getMetadata(restful, controlInstance);
-            logger_1.default.info(`easy-ioc inject controller:${control.name}`);
         });
     }
     logger_1.default.info('easy-ioc tool instantaiate all class completely.');
