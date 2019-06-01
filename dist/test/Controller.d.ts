@@ -6,6 +6,6 @@ export default class TestControl {
     testService: TestService;
     dbService: DbService;
     index(age: number, req: Request, res: Response): void;
-    index2(req: Request, res: Response, next: NextFunction): void;
+    index2(id: string, age: number, req: Request, res: Response, next: NextFunction): void;
     test: () => void;
 }

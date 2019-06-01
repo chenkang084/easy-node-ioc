@@ -4,42 +4,21 @@ import {
   control_reg,
   restful_reg,
   CONTROL,
-  RestfulMethodType,
   RESTFUL
 } from './Constants';
 import logger from '../utils/logger';
-// import { Request, Response, NextFunction } from 'express';
-
-// interface ExpressHandle {
-//   req: Request;
-//   res: Response;
-//   next: NextFunction;
-// }
 
 export const iocContainer = new WeakMap();
 export const controlSet = new Set();
-// export const restfulMap = new Map<any, any>();
 
 function recurInject(target: any) {
   // instantiate target
   const targetInstance = new target();
   logger.info(`instantiate ${target.name}`);
 
-  // bind runtime this for prototype method
-  // Object.getOwnPropertyNames(targetInstance.__proto__)
-  //   .filter((prop: string) => prop !== 'constructor')
-  //   .forEach((prop: string) => {
-  //     const method = targetInstance.__proto__[prop];
-  //     targetInstance.__proto__[prop] = method.bind(targetInstance);
-  //   });
-
   // get the dependance of target
   const depends = Reflect.getOwnMetadataKeys(target).filter(
-    (meta: string) =>
-      // ['design:paramtypes', restful_reg].filter((type: RegExp) =>
-      //   meta.match(type)
-      // ).length === 0
-      'design:paramtypes' !== meta
+    (meta: string) => 'design:paramtypes' !== meta
   );
 
   // iterator dependance
@@ -105,42 +84,29 @@ export function Bootstrap(target: any) {
         const method = controlInstance[methodName];
         const parameterMap = restfulMap.get(method);
         const methodPath = parameterMap.get('path');
-        const parametersSet = parameterMap.get('parameters');
+        const querySet = parameterMap.get('query');
+        const paramsSet = parameterMap.get('params') as Set<string>;
         const methodType = parameterMap.get('methodType');
+        const args = parameterMap.get('args');
 
         app[methodType](
           controlPath + methodPath,
           (req: any, res: any, next: any) => {
-            const parametersVals = Array.from(parametersSet).map(
-              (param: string) => req.query[param]
-            );
+            const parametersVals = args.map((arg: string) => {
+              if (paramsSet.has(arg)) {
+                return req.params[arg];
+              }
+              if (querySet.has(arg)) {
+                return req.query[arg];
+              }
+            });
+
             method.apply(
               controlInstance,
               parametersVals.concat([req, res, next])
             );
           }
         );
-
-        console.log();
-      });
-
-    metas
-      .filter((meta: string) => meta.match(restful_reg))
-      .forEach((restful: string) => {
-        const restInfo = restful.split('@@');
-        const methodType = restInfo[2];
-        const methodPath = restInfo[3];
-
-        const method = Reflect.getMetadata(restful, controlInstance);
-
-        logger.info(`easy-ioc inject controller:${control.name}`);
-
-        // expressInstance.app[methodType as RestfulMethodType](
-        //   controlPath + methodPath,
-        //   (req: any, res: any, next: any) => {
-        //     method.value.call(controlInstance, { req, res, next });
-        //   }
-        // );
       });
   }
 

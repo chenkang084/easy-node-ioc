@@ -1,7 +1,7 @@
 export function getRestfulMap(
   key: any,
   target: ClassDecorator
-): WeakMap<any, any> {
+): WeakMap<ClassDecorator, string | Map<string, any> | Set<string>> {
   let restfulMap = Reflect.getMetadata(key, target);
   if (!restfulMap) {
     restfulMap = new WeakMap();
