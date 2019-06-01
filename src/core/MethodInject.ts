@@ -6,22 +6,22 @@ import {
 } from '../utils/common';
 
 export function Get(path: string) {
-  handleRequest('get', path);
+  return handleRequest('get', path);
 }
 export function Post(path: string) {
-  handleRequest('post', path);
+  return handleRequest('post', path);
 }
 
 export function Put(path: string) {
-  handleRequest('put', path);
+  return handleRequest('put', path);
 }
 
 export function Delete(path: string) {
-  handleRequest('delete', path);
+  return handleRequest('delete', path);
 }
 
 export function Patch(path: string) {
-  handleRequest('patch', path);
+  return handleRequest('patch', path);
 }
 
 function handleRequest(reqType: RestfulMethodType, path: string) {
