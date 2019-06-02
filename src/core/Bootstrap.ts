@@ -1,11 +1,5 @@
 import 'reflect-metadata';
-import {
-  autowired_reg,
-  control_reg,
-  restful_reg,
-  CONTROL,
-  RESTFUL
-} from './Constants';
+import { autowired_reg, control_reg, CONTROL, RESTFUL } from './Constants';
 import logger from '../utils/logger';
 
 export const iocContainer = new WeakMap();
@@ -94,13 +88,13 @@ export function Bootstrap(target: any) {
           controlPath + methodPath,
           (req: any, res: any, next: any) => {
             const parametersVals = args.map((arg: string) => {
-              if (paramsSet.has(arg)) {
+              if (paramsSet && paramsSet.has(arg)) {
                 return req.params[arg];
               }
-              if (querySet.has(arg)) {
+              if (querySet && querySet.has(arg)) {
                 return req.query[arg];
               }
-              if (bodySet.has(arg)) {
+              if (bodySet && bodySet.has(arg)) {
                 return req.body[arg];
               }
             });
