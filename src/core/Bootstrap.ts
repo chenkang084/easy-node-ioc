@@ -86,6 +86,7 @@ export function Bootstrap(target: any) {
         const methodPath = parameterMap.get('path');
         const querySet = parameterMap.get('query');
         const paramsSet = parameterMap.get('params') as Set<string>;
+        const bodySet = parameterMap.get('body') as Set<string>;
         const methodType = parameterMap.get('methodType');
         const args = parameterMap.get('args');
 
@@ -98,6 +99,9 @@ export function Bootstrap(target: any) {
               }
               if (querySet.has(arg)) {
                 return req.query[arg];
+              }
+              if (bodySet.has(arg)) {
+                return req.body[arg];
               }
             });
 
