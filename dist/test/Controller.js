@@ -5,7 +5,7 @@ const __1 = require("../");
 const Service_1 = tslib_1.__importDefault(require("./Service"));
 const DbService_1 = tslib_1.__importDefault(require("./DbService"));
 const MethodInject_1 = require("../core/MethodInject");
-const ParametrDecorate_1 = require("../core/ParametrDecorate");
+const ParameterDecorate_1 = require("../core/ParameterDecorate");
 let TestControl = class TestControl {
     constructor() {
         this.test = () => {
@@ -34,15 +34,15 @@ tslib_1.__decorate([
 ], TestControl.prototype, "dbService", void 0);
 tslib_1.__decorate([
     MethodInject_1.Get('/index'),
-    tslib_1.__param(0, ParametrDecorate_1.RequestParam('age')),
+    tslib_1.__param(0, ParameterDecorate_1.RequestParam('age')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [Number, Object, Object]),
     tslib_1.__metadata("design:returntype", void 0)
 ], TestControl.prototype, "index", null);
 tslib_1.__decorate([
     MethodInject_1.Get('/index2/:id'),
-    tslib_1.__param(0, ParametrDecorate_1.PathVariable('id')),
-    tslib_1.__param(1, ParametrDecorate_1.RequestParam('age')),
+    tslib_1.__param(0, ParameterDecorate_1.PathVariable('id')),
+    tslib_1.__param(1, ParameterDecorate_1.RequestParam('age')),
     tslib_1.__metadata("design:type", Function),
     tslib_1.__metadata("design:paramtypes", [String, Number, Object, Object, Function]),
     tslib_1.__metadata("design:returntype", void 0)
