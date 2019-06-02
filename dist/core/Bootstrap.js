@@ -46,6 +46,7 @@ function Bootstrap(target) {
             const methodPath = parameterMap.get('path');
             const querySet = parameterMap.get('query');
             const paramsSet = parameterMap.get('params');
+            const bodySet = parameterMap.get('body');
             const methodType = parameterMap.get('methodType');
             const args = parameterMap.get('args');
             app[methodType](controlPath + methodPath, (req, res, next) => {
@@ -55,6 +56,9 @@ function Bootstrap(target) {
                     }
                     if (querySet.has(arg)) {
                         return req.query[arg];
+                    }
+                    if (bodySet.has(arg)) {
+                        return req.body[arg];
                     }
                 });
                 method.apply(controlInstance, parametersVals.concat([req, res, next]));

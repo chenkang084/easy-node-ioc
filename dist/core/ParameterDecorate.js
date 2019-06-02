@@ -32,4 +32,19 @@ function PathVariable(requestParam) {
     };
 }
 exports.PathVariable = PathVariable;
+function Body(propName) {
+    return (target, propertyKey, parameterIndex) => {
+        const restfulMap = common_1.getRestfulMap(`${Constants_1.RESTFUL}`, target);
+        const method = target[propertyKey];
+        const methodMap = common_1.getRestfulParameterMap(method, restfulMap);
+        const bodySet = common_1.getRestfulParameterSet(methodMap);
+        bodySet.add(propName);
+        methodMap.set('body', bodySet);
+        if (!restfulMap.has(method)) {
+            restfulMap.set(method, methodMap);
+        }
+        Reflect.defineMetadata(Constants_1.RESTFUL, restfulMap, target);
+    };
+}
+exports.Body = Body;
 //# sourceMappingURL=ParameterDecorate.js.map
