@@ -3,6 +3,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const Constants_1 = require("./Constants");
 const common_1 = require("../utils/common");
 function Get(path) {
+    return handleRequest('get', path);
+}
+exports.Get = Get;
+function Post(path) {
+    return handleRequest('post', path);
+}
+exports.Post = Post;
+function Put(path) {
+    return handleRequest('put', path);
+}
+exports.Put = Put;
+function Delete(path) {
+    return handleRequest('delete', path);
+}
+exports.Delete = Delete;
+function Patch(path) {
+    return handleRequest('patch', path);
+}
+exports.Patch = Patch;
+function handleRequest(reqType, path) {
     return function (target, propertyKey, descriptor) {
         const restfulMap = common_1.getRestfulMap(`${Constants_1.RESTFUL}`, target);
         const method = target[propertyKey];
@@ -16,5 +36,4 @@ function Get(path) {
         Reflect.defineMetadata(Constants_1.RESTFUL, restfulMap, target);
     };
 }
-exports.Get = Get;
 //# sourceMappingURL=MethodInject.js.map
