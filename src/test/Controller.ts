@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import TestService from './Service';
 import DbService from './DbService';
 import { Get } from '../core/MethodInject';
-import { RequestParam, PathVariable } from '../core/ParametrDecorate';
+import { RequestParam, PathVariable } from '../core/ParameterDecorate';
 
 @Controller('/test')
 export default class TestControl {
