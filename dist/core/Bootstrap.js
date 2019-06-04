@@ -31,6 +31,7 @@ function Bootstrap(target) {
     const expressInstance = exports.iocContainer.get(target);
     const { app } = expressInstance;
     for (const control of exports.controlSet) {
+        recurInject(control);
         const controlInstance = exports.iocContainer.get(control);
         const metas = Reflect.getMetadataKeys(controlInstance);
         const restfulMap = Reflect.getMetadata(Constants_1.RESTFUL, controlInstance);

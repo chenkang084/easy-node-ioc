@@ -56,14 +56,14 @@ export function Bootstrap(target: any) {
 
   recurInject(target);
 
-  // console.log(controlSet);
-
   // instantiate app class
   const expressInstance = iocContainer.get(target);
   const { app } = expressInstance;
 
   // loop all control class
   for (const control of controlSet) {
+    recurInject(control);
+
     // get control instance
     const controlInstance = iocContainer.get(control);
     // get instance's metas

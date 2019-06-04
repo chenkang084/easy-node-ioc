@@ -8,7 +8,9 @@ function Injectable(path) {
         const targetName = target.name;
         if (path) {
             Reflect.defineMetadata(Constants_1.CONTROL, path, target);
-            __1.controlSet.add(target);
+            if (!__1.controlSet.has(target)) {
+                __1.controlSet.add(target);
+            }
         }
     };
 }

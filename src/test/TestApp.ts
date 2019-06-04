@@ -5,8 +5,11 @@ import http = require('http');
 
 @Bootstrap
 class App {
-  @Autowired
-  testControl: TestControl;
+  // @Autowired
+  // testControl: TestControl;
+  constructor() {
+    require('./Controller');
+  }
 
   app = express();
 
