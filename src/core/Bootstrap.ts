@@ -35,9 +35,9 @@ function recurInject(target: any) {
       logger.info(` add prop [${prop}]: to ${target.name}`);
     }
 
-    if (depClass.match(control_reg)) {
-      controlSet.add(target);
-    }
+    // if (depClass.match(control_reg)) {
+    //   controlSet.add(target);
+    // }
   });
 
   // inject instance to container
