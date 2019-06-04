@@ -21,9 +21,6 @@ function recurInject(target) {
             targetInstance[prop] = depInstance;
             logger_1.default.info(` add prop [${prop}]: to ${target.name}`);
         }
-        if (depClass.match(Constants_1.control_reg)) {
-            exports.controlSet.add(target);
-        }
     });
     exports.iocContainer.set(target, targetInstance);
     return targetInstance;
@@ -51,13 +48,13 @@ function Bootstrap(target) {
             const args = parameterMap.get('args');
             app[methodType](controlPath + methodPath, (req, res, next) => {
                 const parametersVals = args.map((arg) => {
-                    if (paramsSet.has(arg)) {
+                    if (paramsSet && paramsSet.has(arg)) {
                         return req.params[arg];
                     }
-                    if (querySet.has(arg)) {
+                    if (querySet && querySet.has(arg)) {
                         return req.query[arg];
                     }
-                    if (bodySet.has(arg)) {
+                    if (bodySet && bodySet.has(arg)) {
                         return req.body[arg];
                     }
                 });

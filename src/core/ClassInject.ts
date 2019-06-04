@@ -2,6 +2,7 @@ import 'reflect-metadata';
 // import { classMap } from './Bootstrap';
 import logger from '../utils/logger';
 import { CONTROL } from './Constants';
+import { controlSet } from '..';
 // import { DecoratorType } from './Types';
 
 /**
@@ -20,6 +21,7 @@ function Injectable(path?: string) {
 
     if (path) {
       Reflect.defineMetadata(CONTROL, path, target);
+      controlSet.add(target);
     }
   };
 }
