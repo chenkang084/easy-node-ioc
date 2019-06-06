@@ -3,14 +3,13 @@ import 'reflect-metadata';
 import logger from '../utils/logger';
 import { CONTROL } from './Constants';
 import { controlSet } from '..';
-// import { DecoratorType } from './Types';
 
 /**
  * add class constructor to classMap
  */
 
 function Injectable(path?: string) {
-  return (target: Function) => {
+  return (target: Function | any) => {
     const targetName = target.name;
     // TODO class name duplicate
     // use function as key since map save it by function's pointer
@@ -21,7 +20,10 @@ function Injectable(path?: string) {
 
     if (path) {
       Reflect.defineMetadata(CONTROL, path, target);
-      controlSet.add(target);
+
+      if (!controlSet.has(target)) {
+        controlSet.add(target);
+      }
     }
   };
 }

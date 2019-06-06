@@ -2,6 +2,8 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
 require("reflect-metadata");
+const fs_1 = require("fs");
+const path_1 = require("path");
 const Constants_1 = require("./Constants");
 const logger_1 = tslib_1.__importDefault(require("../utils/logger"));
 exports.iocContainer = new WeakMap();
@@ -26,11 +28,12 @@ function recurInject(target) {
     return targetInstance;
 }
 function Bootstrap(target) {
-    logger_1.default.info(' tool start to instantaiate class');
+    logger_1.default.info('tool start to instantaiate class');
     recurInject(target);
     const expressInstance = exports.iocContainer.get(target);
     const { app } = expressInstance;
     for (const control of exports.controlSet) {
+        recurInject(control);
         const controlInstance = exports.iocContainer.get(control);
         const metas = Reflect.getMetadataKeys(controlInstance);
         const restfulMap = Reflect.getMetadata(Constants_1.RESTFUL, controlInstance);
@@ -66,4 +69,33 @@ function Bootstrap(target) {
     expressInstance.main();
 }
 exports.Bootstrap = Bootstrap;
+function loadFile(path) {
+    const appBootstrapPath = path_1.join(process.argv[1], '..');
+    let absolutePath = path;
+    if (path.indexOf(appBootstrapPath) === -1) {
+        absolutePath = path_1.join(appBootstrapPath, path);
+    }
+    const stats = fs_1.statSync(absolutePath);
+    if (stats.isDirectory()) {
+        const files = fs_1.readdirSync(absolutePath);
+        for (const file of files) {
+            loadFile(path_1.join(absolutePath, file));
+        }
+    }
+    else {
+        if (absolutePath.match(/.*[^\.]+\b\.js\b$/)) {
+            logger_1.default.info(`scan file ${absolutePath}`);
+            require(absolutePath);
+        }
+    }
+}
+function ComponentScan(scanPath) {
+    if (scanPath) {
+        scanPath.split(',').forEach(path => {
+            loadFile(path);
+        });
+    }
+    return (target) => { };
+}
+exports.ComponentScan = ComponentScan;
 //# sourceMappingURL=Bootstrap.js.map

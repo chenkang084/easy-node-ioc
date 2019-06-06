@@ -1,8 +1,10 @@
 import 'reflect-metadata';
-import { autowired_reg, control_reg, CONTROL, RESTFUL } from './Constants';
+import { statSync, readdirSync } from 'fs';
+import { join, resolve } from 'path';
+import { autowired_reg, CONTROL, RESTFUL } from './Constants';
 import logger from '../utils/logger';
 
-export const iocContainer = new WeakMap();
+export const iocContainer = new WeakMap<any, any>();
 export const controlSet = new Set();
 
 function recurInject(target: any) {
@@ -52,11 +54,9 @@ function recurInject(target: any) {
  * @param target
  */
 export function Bootstrap(target: any) {
-  logger.info(' tool start to instantaiate class');
+  logger.info('tool start to instantaiate class');
 
   recurInject(target);
-
-  // console.log(controlSet);
 
   // instantiate app class
   const expressInstance = iocContainer.get(target);
@@ -64,6 +64,8 @@ export function Bootstrap(target: any) {
 
   // loop all control class
   for (const control of controlSet) {
+    recurInject(control);
+
     // get control instance
     const controlInstance = iocContainer.get(control);
     // get instance's metas
@@ -111,4 +113,38 @@ export function Bootstrap(target: any) {
   logger.info('easy-ioc tool instantaiate all class completely.');
 
   expressInstance.main();
+}
+
+function loadFile(path: string) {
+  const appBootstrapPath = join(process.argv[1], '..');
+  let absolutePath = path;
+
+  if (path.indexOf(appBootstrapPath) === -1) {
+    absolutePath = join(appBootstrapPath, path);
+  }
+
+  const stats = statSync(absolutePath);
+
+  if (stats.isDirectory()) {
+    const files = readdirSync(absolutePath);
+    for (const file of files) {
+      // console.log(join(absolutePath, file));
+      loadFile(join(absolutePath, file));
+    }
+  } else {
+    if (absolutePath.match(/.*[^\.]+\b\.js\b$/)) {
+      logger.info(`scan file ${absolutePath}`);
+      require(absolutePath);
+    }
+  }
+}
+
+export function ComponentScan(scanPath: string) {
+  if (scanPath) {
+    scanPath.split(',').forEach(path => {
+      loadFile(path);
+    });
+  }
+
+  return (target: any) => {};
 }
