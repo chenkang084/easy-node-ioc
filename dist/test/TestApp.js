@@ -17,6 +17,7 @@ let App = class App {
     }
 };
 App = tslib_1.__decorate([
+    __1.ComponentScan('./Controller.js'),
     __1.Bootstrap,
     tslib_1.__metadata("design:paramtypes", [])
 ], App);
