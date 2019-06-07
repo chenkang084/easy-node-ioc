@@ -132,7 +132,7 @@ function loadFile(path: string) {
       loadFile(join(absolutePath, file));
     }
   } else {
-    if (absolutePath.match(/.*[^\.]+\b\.js\b$/)) {
+    if (absolutePath.match(/.*[^\.]+\b\.(t|j)s\b$/)) {
       logger.info(`scan file ${absolutePath}`);
       require(absolutePath);
     }

@@ -83,7 +83,7 @@ function loadFile(path) {
         }
     }
     else {
-        if (absolutePath.match(/.*[^\.]+\b\.js\b$/)) {
+        if (absolutePath.match(/.*[^\.]+\b\.(t|j)s\b$/)) {
             logger_1.default.info(`scan file ${absolutePath}`);
             require(absolutePath);
         }
