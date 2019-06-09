@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import { statSync, readdirSync } from 'fs';
 import { join, resolve } from 'path';
-import { autowired_reg, CONTROL, RESTFUL } from './Constants';
+import { autowired_reg, CONTROL, RESTFUL, MIDDLEWARE } from './Constants';
 import logger from '../utils/logger';
 
 export const iocContainer = new WeakMap<any, any>();
@@ -85,28 +85,37 @@ export function Bootstrap(target: any) {
         const bodySet = parameterMap.get('body') as Set<string>;
         const methodType = parameterMap.get('methodType');
         const args = parameterMap.get('args');
+        const middleWareSet = parameterMap.get(MIDDLEWARE);
 
-        app[methodType](
-          controlPath + methodPath,
-          (req: any, res: any, next: any) => {
-            const parametersVals = args.map((arg: string) => {
-              if (paramsSet && paramsSet.has(arg)) {
-                return req.params[arg];
-              }
-              if (querySet && querySet.has(arg)) {
-                return req.query[arg];
-              }
-              if (bodySet && bodySet.has(arg)) {
-                return req.body[arg];
-              }
-            });
+        const handleRequest = (req: any, res: any, next: any) => {
+          const parametersVals = args.map((arg: string) => {
+            if (paramsSet && paramsSet.has(arg)) {
+              return req.params[arg];
+            }
+            if (querySet && querySet.has(arg)) {
+              return req.query[arg];
+            }
+            if (bodySet && bodySet.has(arg)) {
+              return req.body[arg];
+            }
+          });
 
-            method.apply(
-              controlInstance,
-              parametersVals.concat([req, res, next])
-            );
-          }
-        );
+          method.apply(
+            controlInstance,
+            parametersVals.concat([req, res, next])
+          );
+        };
+
+        // has middlewares, apply middlewares
+        if (middleWareSet) {
+          app[methodType](
+            controlPath + methodPath,
+            Array.from(middleWareSet),
+            handleRequest
+          );
+        } else {
+          app[methodType](controlPath + methodPath, handleRequest);
+        }
       });
   }
 

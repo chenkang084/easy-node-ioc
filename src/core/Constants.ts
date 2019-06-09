@@ -5,5 +5,7 @@ export const AUTOWIRED = '@@AUTOWIRED';
 export const autowired_reg = new RegExp(`^${AUTOWIRED}@@`);
 export const RESTFUL = '@@RESTFUL';
 export const restful_reg = new RegExp(`^${RESTFUL}`);
+export const MIDDLEWARE = '@@MIDDLEWARE';
+export const middleWare_reg = new RegExp(`^${MIDDLEWARE}`);
 
 export type RestfulMethodType = 'get' | 'post' | 'put' | 'patch' | 'delete';

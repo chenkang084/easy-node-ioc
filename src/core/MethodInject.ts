@@ -1,9 +1,12 @@
-import { RESTFUL, RestfulMethodType } from './Constants';
+import { RESTFUL, RestfulMethodType, MIDDLEWARE } from './Constants';
 import {
   getRestfulMap,
   getRestfulParameterMap,
   getFunctionParams
 } from '../utils/common';
+import multer from 'multer';
+
+const upload = multer();
 
 export function Get(path: string) {
   return handleRequest('get', path);
@@ -59,4 +62,30 @@ function handleRequest(reqType: RestfulMethodType, path: string) {
     // define or overwrite RESTFUL map
     Reflect.defineMetadata(RESTFUL, restfulMap, target);
   };
+}
+
+export function Multer(
+  target: any,
+  propertyKey: string | symbol,
+  descriptor: PropertyDescriptor
+) {
+  const restfulMap = getRestfulMap(`${RESTFUL}`, target);
+  const method = target[propertyKey];
+
+  const methodMap = getRestfulParameterMap(method, restfulMap);
+
+  let middleWareSet = methodMap.get(MIDDLEWARE) as Set<any>;
+
+  if (!middleWareSet) {
+    middleWareSet = new Set();
+  }
+
+  middleWareSet.add(upload.any());
+  methodMap.set(MIDDLEWARE, middleWareSet);
+
+  if (!restfulMap.has(method)) {
+    restfulMap.set(method, methodMap);
+  }
+
+  Reflect.defineMetadata(RESTFUL, restfulMap, target);
 }

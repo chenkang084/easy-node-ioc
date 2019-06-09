@@ -7,4 +7,6 @@ exports.AUTOWIRED = '@@AUTOWIRED';
 exports.autowired_reg = new RegExp(`^${exports.AUTOWIRED}@@`);
 exports.RESTFUL = '@@RESTFUL';
 exports.restful_reg = new RegExp(`^${exports.RESTFUL}`);
+exports.MIDDLEWARE = '@@MIDDLEWARE';
+exports.middleWare_reg = new RegExp(`^${exports.MIDDLEWARE}`);
 //# sourceMappingURL=Constants.js.map
