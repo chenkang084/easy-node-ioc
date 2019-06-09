@@ -2,14 +2,11 @@ import { Controller, Autowired } from '../';
 import { Request, Response, NextFunction } from 'express';
 import TestService from './Service';
 import DbService from './DbService';
-import { Get } from '../core/MethodInject';
+import { Get, Multer } from '../core/MethodInject';
 import { RequestParam, PathVariable } from '../core/ParameterDecorate';
 
 @Controller('/test')
 export default class TestControl {
-  constructor() {
-    this.index.bind(this);
-  }
   @Autowired
   testService: TestService;
   @Autowired
@@ -18,7 +15,6 @@ export default class TestControl {
   @Get('/index')
   index(@RequestParam('age') age: number, req: Request, res: Response) {
     console.log('index method');
-    // console.log(req);
     this.dbService.queryDb();
 
     res.status(200).send(this.testService.queryDb());
@@ -37,7 +33,9 @@ export default class TestControl {
     res.status(200).send(this.testService.queryDb());
   }
 
-  test = () => {
+  @Get('/test-file')
+  @Multer
+  test(req: Request, res: Response) {
     console.log('control test method');
-  };
+  }
 }

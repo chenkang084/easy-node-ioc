@@ -7,12 +7,6 @@ const DbService_1 = tslib_1.__importDefault(require("./DbService"));
 const MethodInject_1 = require("../core/MethodInject");
 const ParameterDecorate_1 = require("../core/ParameterDecorate");
 let TestControl = class TestControl {
-    constructor() {
-        this.test = () => {
-            console.log('control test method');
-        };
-        this.index.bind(this);
-    }
     index(age, req, res) {
         console.log('index method');
         this.dbService.queryDb();
@@ -22,6 +16,9 @@ let TestControl = class TestControl {
         console.log('index method');
         this.dbService.queryDb();
         res.status(200).send(this.testService.queryDb());
+    }
+    test(req, res) {
+        console.log('control test method');
     }
 };
 tslib_1.__decorate([
@@ -47,9 +44,15 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:paramtypes", [String, Number, Object, Object, Function]),
     tslib_1.__metadata("design:returntype", void 0)
 ], TestControl.prototype, "index2", null);
+tslib_1.__decorate([
+    MethodInject_1.Get('/test-file'),
+    MethodInject_1.Multer,
+    tslib_1.__metadata("design:type", Function),
+    tslib_1.__metadata("design:paramtypes", [Object, Object]),
+    tslib_1.__metadata("design:returntype", void 0)
+], TestControl.prototype, "test", null);
 TestControl = tslib_1.__decorate([
-    __1.Controller('/test'),
-    tslib_1.__metadata("design:paramtypes", [])
+    __1.Controller('/test')
 ], TestControl);
 exports.default = TestControl;
 //# sourceMappingURL=Controller.js.map

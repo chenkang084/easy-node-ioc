@@ -49,7 +49,8 @@ function Bootstrap(target) {
             const bodySet = parameterMap.get('body');
             const methodType = parameterMap.get('methodType');
             const args = parameterMap.get('args');
-            app[methodType](controlPath + methodPath, (req, res, next) => {
+            const middleWareSet = parameterMap.get(Constants_1.MIDDLEWARE);
+            const handleRequest = (req, res, next) => {
                 const parametersVals = args.map((arg) => {
                     if (paramsSet && paramsSet.has(arg)) {
                         return req.params[arg];
@@ -62,7 +63,13 @@ function Bootstrap(target) {
                     }
                 });
                 method.apply(controlInstance, parametersVals.concat([req, res, next]));
-            });
+            };
+            if (middleWareSet) {
+                app[methodType](controlPath + methodPath, Array.from(middleWareSet), handleRequest);
+            }
+            else {
+                app[methodType](controlPath + methodPath, handleRequest);
+            }
         });
     }
     logger_1.default.info('easy-ioc tool instantaiate all class completely.');
