@@ -125,25 +125,18 @@ export function Bootstrap(target: any) {
 }
 
 function loadFile(path: string) {
-  const appBootstrapPath = join(process.argv[1], '..');
-  let absolutePath = path;
-
-  if (path.indexOf(appBootstrapPath) === -1) {
-    absolutePath = join(appBootstrapPath, path);
-  }
-
-  const stats = statSync(absolutePath);
+  const stats = statSync(path);
 
   if (stats.isDirectory()) {
-    const files = readdirSync(absolutePath);
+    const files = readdirSync(path);
     for (const file of files) {
-      // console.log(join(absolutePath, file));
-      loadFile(join(absolutePath, file));
+      // console.log(join(path, file));
+      loadFile(join(path, file));
     }
   } else {
-    if (absolutePath.match(/.*[^\.]+\b\.(t|j)s\b$/)) {
-      logger.info(`scan file ${absolutePath}`);
-      require(absolutePath);
+    if (path.match(/.*[^\.]+\b\.(t|j)s\b$/)) {
+      logger.info(`scan file ${path}`);
+      require(path);
     }
   }
 }
