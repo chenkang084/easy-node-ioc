@@ -77,22 +77,17 @@ function Bootstrap(target) {
 }
 exports.Bootstrap = Bootstrap;
 function loadFile(path) {
-    const appBootstrapPath = path_1.join(process.argv[1], '..');
-    let absolutePath = path;
-    if (path.indexOf(appBootstrapPath) === -1) {
-        absolutePath = path_1.join(appBootstrapPath, path);
-    }
-    const stats = fs_1.statSync(absolutePath);
+    const stats = fs_1.statSync(path);
     if (stats.isDirectory()) {
-        const files = fs_1.readdirSync(absolutePath);
+        const files = fs_1.readdirSync(path);
         for (const file of files) {
-            loadFile(path_1.join(absolutePath, file));
+            loadFile(path_1.join(path, file));
         }
     }
     else {
-        if (absolutePath.match(/.*[^\.]+\b\.(t|j)s\b$/)) {
-            logger_1.default.info(`scan file ${absolutePath}`);
-            require(absolutePath);
+        if (path.match(/.*[^\.]+\b\.(t|j)s\b$/)) {
+            logger_1.default.info(`scan file ${path}`);
+            require(path);
         }
     }
 }
