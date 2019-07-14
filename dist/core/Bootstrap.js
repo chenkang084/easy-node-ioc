@@ -50,7 +50,7 @@ function Bootstrap(target) {
             const methodType = parameterMap.get('methodType');
             const args = parameterMap.get('args');
             const middleWareSet = parameterMap.get(Constants_1.MIDDLEWARE);
-            const handleRequest = (req, res, next) => {
+            const handleRequest = (req, res, next) => tslib_1.__awaiter(this, void 0, void 0, function* () {
                 const parametersVals = args.map((arg) => {
                     if (paramsSet && paramsSet.has(arg)) {
                         return req.params[arg];
@@ -62,8 +62,13 @@ function Bootstrap(target) {
                         return req.body[arg];
                     }
                 });
-                method.apply(controlInstance, parametersVals.concat([req, res, next]));
-            };
+                try {
+                    yield method.apply(controlInstance, parametersVals.concat([req, res, next]));
+                }
+                catch (error) {
+                    res.status(500).send(error && error.message);
+                }
+            });
             if (middleWareSet) {
                 app[methodType](controlPath + methodPath, Array.from(middleWareSet), handleRequest);
             }

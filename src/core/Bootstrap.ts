@@ -87,7 +87,7 @@ export function Bootstrap(target: any) {
         const args = parameterMap.get('args');
         const middleWareSet = parameterMap.get(MIDDLEWARE);
 
-        const handleRequest = (req: any, res: any, next: any) => {
+        const handleRequest = async (req: any, res: any, next: any) => {
           const parametersVals = args.map((arg: string) => {
             if (paramsSet && paramsSet.has(arg)) {
               return req.params[arg];
@@ -100,10 +100,15 @@ export function Bootstrap(target: any) {
             }
           });
 
-          method.apply(
-            controlInstance,
-            parametersVals.concat([req, res, next])
-          );
+          // catch promise error
+          try {
+            await method.apply(
+              controlInstance,
+              parametersVals.concat([req, res, next])
+            );
+          } catch (error) {
+            res.status(500).send(error && error.message);
+          }
         };
 
         // has middlewares, apply middlewares
