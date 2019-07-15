@@ -9,9 +9,6 @@
   },
   "author": "chenkang084@163.com",
   "license": "ISC",
-  "files": [
-    "dist/"
-  ],
   "devDependencies": {
     "@types/express": "^4.16.1",
     "easy-node-utils": "0.0.1",
