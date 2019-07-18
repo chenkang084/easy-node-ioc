@@ -107,6 +107,7 @@ export function Bootstrap(target: any) {
               parametersVals.concat([req, res, next])
             );
           } catch (error) {
+            logger.error(error);
             res.status(500).send(error && error.message);
           }
         };

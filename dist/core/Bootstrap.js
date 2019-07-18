@@ -66,6 +66,7 @@ function Bootstrap(target) {
                     yield method.apply(controlInstance, parametersVals.concat([req, res, next]));
                 }
                 catch (error) {
+                    logger_1.default.error(error);
                     res.status(500).send(error && error.message);
                 }
             });
