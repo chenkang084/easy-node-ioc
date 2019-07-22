@@ -1,12 +1,12 @@
-import { Controller, Autowired } from '../';
+import { Controller, Autowired } from '../src';
 import { Request, Response, NextFunction } from 'express';
 import TestService from './Service';
 import DbService from './DbService';
-import { Get, Multer } from '../core/MethodInject';
-import { RequestParam, PathVariable } from '../core/ParameterDecorate';
+import { Get, Multer } from '../src/core/MethodInject';
+import { RequestParam, PathVariable } from '../src/core/ParameterDecorate';
 
-@Controller('/test')
-export default class TestControl {
+@Controller('/api/test')
+class TestControl {
   @Autowired
   testService: TestService;
   @Autowired

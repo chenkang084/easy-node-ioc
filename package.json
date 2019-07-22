@@ -1,6 +1,6 @@
 {
   "name": "easy-node-ioc",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Typescript IOC Tool",
   "main": "dist/index.js",
   "scripts": {

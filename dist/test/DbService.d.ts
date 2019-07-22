@@ -1,3 +1,3 @@
-export default class DbService {
+export default class TestService {
     queryDb(): string;
 }

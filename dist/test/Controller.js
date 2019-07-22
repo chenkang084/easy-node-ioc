@@ -1,11 +1,11 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 const tslib_1 = require("tslib");
-const __1 = require("../");
+const src_1 = require("../src");
 const Service_1 = tslib_1.__importDefault(require("./Service"));
 const DbService_1 = tslib_1.__importDefault(require("./DbService"));
-const MethodInject_1 = require("../core/MethodInject");
-const ParameterDecorate_1 = require("../core/ParameterDecorate");
+const MethodInject_1 = require("../src/core/MethodInject");
+const ParameterDecorate_1 = require("../src/core/ParameterDecorate");
 let TestControl = class TestControl {
     index(age, req, res) {
         console.log('index method');
@@ -22,11 +22,11 @@ let TestControl = class TestControl {
     }
 };
 tslib_1.__decorate([
-    __1.Autowired,
+    src_1.Autowired,
     tslib_1.__metadata("design:type", Service_1.default)
 ], TestControl.prototype, "testService", void 0);
 tslib_1.__decorate([
-    __1.Autowired,
+    src_1.Autowired,
     tslib_1.__metadata("design:type", DbService_1.default)
 ], TestControl.prototype, "dbService", void 0);
 tslib_1.__decorate([
@@ -52,7 +52,6 @@ tslib_1.__decorate([
     tslib_1.__metadata("design:returntype", void 0)
 ], TestControl.prototype, "test", null);
 TestControl = tslib_1.__decorate([
-    __1.Controller('/test')
+    src_1.Controller('/api/test')
 ], TestControl);
-exports.default = TestControl;
 //# sourceMappingURL=Controller.js.map
