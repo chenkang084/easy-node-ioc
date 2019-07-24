@@ -7,7 +7,7 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "current ts file",
+      "name": "Launch Test Case",
       "args": ["test/App.ts"],
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
       "cwd": "${workspaceRoot}",
