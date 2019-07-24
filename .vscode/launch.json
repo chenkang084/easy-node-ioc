@@ -7,21 +7,10 @@
     {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
-      "program": "${workspaceFolder}/test/App.ts",
-      "preLaunchTask": "tsc: build - tsconfig.json",
-      "outFiles": ["${workspaceFolder}/dist/**/*.*"],
-      "env": { "NODE_ENV": "development" }
-    },
-    {
       "name": "current ts file",
-      "type": "node",
-      "request": "launch",
-      "args": ["${relativeFile}"],
+      "args": ["test/App.ts"],
       "runtimeArgs": ["--nolazy", "-r", "ts-node/register"],
       "cwd": "${workspaceRoot}",
-      "protocol": "inspector",
-      "internalConsoleOptions": "openOnSessionStart",
       "env": { "NODE_ENV": "development" }
     }
   ]

@@ -3,7 +3,7 @@ import { join } from 'path';
 import express = require('express');
 import http = require('http');
 
-@ComponentScan(join(__dirname, './Controller.js'))
+@ComponentScan(join(__dirname, './Controller.ts'))
 @Bootstrap
 class App {
   constructor() {}
