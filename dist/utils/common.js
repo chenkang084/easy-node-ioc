@@ -16,8 +16,8 @@ function getRestfulParameterMap(key, map) {
     return parameterMap;
 }
 exports.getRestfulParameterMap = getRestfulParameterMap;
-function getRestfulParameterSet(map) {
-    let set = map.get('parameters');
+function getRestfulParameterSet(map, type) {
+    let set = map.get(type);
     if (!set) {
         set = new Set();
     }

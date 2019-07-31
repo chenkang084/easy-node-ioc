@@ -24,7 +24,7 @@ export function RequestParam(requestParam: string) {
 
     const methodMap = getRestfulParameterMap(method, restfulMap);
 
-    const parametersSet = getRestfulParameterSet(methodMap);
+    const parametersSet = getRestfulParameterSet(methodMap, 'query');
     parametersSet.add(requestParam);
 
     methodMap.set('query', parametersSet);
@@ -57,7 +57,7 @@ export function PathVariable(requestParam: string) {
 
     const methodMap = getRestfulParameterMap(method, restfulMap);
 
-    const parametersSet = getRestfulParameterSet(methodMap);
+    const parametersSet = getRestfulParameterSet(methodMap, 'params');
     parametersSet.add(requestParam);
 
     methodMap.set('params', parametersSet);
@@ -90,7 +90,7 @@ export function Body(propName: string) {
 
     const methodMap = getRestfulParameterMap(method, restfulMap);
 
-    const bodySet = getRestfulParameterSet(methodMap);
+    const bodySet = getRestfulParameterSet(methodMap, 'body');
     bodySet.add(propName);
 
     methodMap.set('body', bodySet);

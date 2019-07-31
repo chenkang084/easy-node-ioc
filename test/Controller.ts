@@ -25,6 +25,7 @@ class TestControl {
   index2(
     @PathVariable('id') id: string,
     @RequestParam('age') age: number,
+    @RequestParam('hello') hello: string,
     req: Request,
     res: Response,
     next: NextFunction

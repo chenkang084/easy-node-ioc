@@ -17,8 +17,8 @@ export function getRestfulParameterMap(key: any, map: any): Map<any, any> {
   return parameterMap;
 }
 
-export function getRestfulParameterSet(map: any): Set<string> {
-  let set = map.get('parameters');
+export function getRestfulParameterSet(map: any, type: string): Set<string> {
+  let set = map.get(type);
   if (!set) {
     set = new Set();
   }
