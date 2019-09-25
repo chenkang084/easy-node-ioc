@@ -7,7 +7,7 @@ const logger = {
     },
     info: (...args) => {
         if (env === 'development') {
-            args.unshift('easy-ioc:');
+            args.unshift('easy-node-ioc:');
             console.info.apply(console, args);
         }
     }
