@@ -6,6 +6,9 @@ import logger from '../utils/logger';
 
 export const iocContainer = new WeakMap<any, any>();
 export const controlSet = new Set();
+export const preHandles: Promise<any>[] = [];
+
+const startTime = Date.now();
 
 function recurInject(target: any) {
   // instantiate target
@@ -54,80 +57,92 @@ function recurInject(target: any) {
  * @param target
  */
 export function Bootstrap(target: any) {
-  logger.info('tool start to instantaiate class');
+  (async function run() {
+    logger.info('tool start to instantaiate class');
 
-  recurInject(target);
+    if (preHandles.length > 0) {
+      logger.info('start to execuate preHandle methods');
+      for (const promise of preHandles) {
+        await promise;
+      }
+      logger.info('execuate preHandle methods done');
+    }
 
-  // instantiate app class
-  const expressInstance = iocContainer.get(target);
-  const { app } = expressInstance;
+    recurInject(target);
 
-  // loop all control class
-  for (const control of controlSet) {
-    recurInject(control);
+    // instantiate app class
+    const expressInstance = iocContainer.get(target);
+    const { app } = expressInstance;
 
-    // get control instance
-    const controlInstance = iocContainer.get(control);
-    // get instance's metas
-    const metas = Reflect.getMetadataKeys(controlInstance);
+    // loop all control class
+    for (const control of controlSet) {
+      recurInject(control);
 
-    const restfulMap = Reflect.getMetadata(RESTFUL, controlInstance);
-    const controlPath = Reflect.getMetadata(CONTROL, control);
+      // get control instance
+      const controlInstance = iocContainer.get(control);
+      // get instance's metas
+      const metas = Reflect.getMetadataKeys(controlInstance);
 
-    Object.getOwnPropertyNames(controlInstance.__proto__)
-      .filter(name => name !== 'constructor')
-      .forEach(methodName => {
-        const method = controlInstance[methodName];
-        const parameterMap = restfulMap.get(method);
-        const methodPath = parameterMap.get('path');
-        const querySet = parameterMap.get('query');
-        const paramsSet = parameterMap.get('params') as Set<string>;
-        const bodySet = parameterMap.get('body') as Set<string>;
-        const methodType = parameterMap.get('methodType');
-        const args = parameterMap.get('args');
-        const middleWareSet = parameterMap.get(MIDDLEWARE);
+      const restfulMap = Reflect.getMetadata(RESTFUL, controlInstance);
+      const controlPath = Reflect.getMetadata(CONTROL, control);
 
-        const handleRequest = async (req: any, res: any, next: any) => {
-          const parametersVals = args.map((arg: string) => {
-            if (paramsSet && paramsSet.has(arg)) {
-              return req.params[arg];
+      Object.getOwnPropertyNames(controlInstance.__proto__)
+        .filter(name => name !== 'constructor')
+        .forEach(methodName => {
+          const method = controlInstance[methodName];
+          const parameterMap = restfulMap.get(method);
+          const methodPath = parameterMap.get('path');
+          const querySet = parameterMap.get('query');
+          const paramsSet = parameterMap.get('params') as Set<string>;
+          const bodySet = parameterMap.get('body') as Set<string>;
+          const methodType = parameterMap.get('methodType');
+          const args = parameterMap.get('args');
+          const middleWareSet = parameterMap.get(MIDDLEWARE);
+
+          const handleRequest = async (req: any, res: any, next: any) => {
+            const parametersVals = args.map((arg: string) => {
+              if (paramsSet && paramsSet.has(arg)) {
+                return req.params[arg];
+              }
+              if (querySet && querySet.has(arg)) {
+                return req.query[arg];
+              }
+              if (bodySet && bodySet.has(arg)) {
+                return req.body[arg];
+              }
+            });
+
+            // catch promise error
+            try {
+              await method.apply(
+                controlInstance,
+                parametersVals.concat([req, res, next])
+              );
+            } catch (error) {
+              logger.error(error);
+              res.status(500).send(error && error.message);
             }
-            if (querySet && querySet.has(arg)) {
-              return req.query[arg];
-            }
-            if (bodySet && bodySet.has(arg)) {
-              return req.body[arg];
-            }
-          });
+          };
 
-          // catch promise error
-          try {
-            await method.apply(
-              controlInstance,
-              parametersVals.concat([req, res, next])
+          // has middlewares, apply middlewares
+          if (middleWareSet) {
+            app[methodType](
+              controlPath + methodPath,
+              Array.from(middleWareSet),
+              handleRequest
             );
-          } catch (error) {
-            logger.error(error);
-            res.status(500).send(error && error.message);
+          } else {
+            app[methodType](controlPath + methodPath, handleRequest);
           }
-        };
+        });
+    }
 
-        // has middlewares, apply middlewares
-        if (middleWareSet) {
-          app[methodType](
-            controlPath + methodPath,
-            Array.from(middleWareSet),
-            handleRequest
-          );
-        } else {
-          app[methodType](controlPath + methodPath, handleRequest);
-        }
-      });
-  }
+    logger.info('instantaiate all class completely.');
 
-  logger.info('easy-ioc tool instantaiate all class completely.');
+    expressInstance.main();
 
-  expressInstance.main();
+    logger.info(`start application spent ${(Date.now() - startTime) / 1000} s`);
+  })();
 }
 
 function loadFile(path: string) {
