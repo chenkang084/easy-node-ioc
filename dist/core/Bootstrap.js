@@ -23,7 +23,7 @@ function recurInject(target) {
                 depInstance = recurInject(_constructor);
             }
             targetInstance[prop] = depInstance;
-            logger_1.default.info(` add prop [${prop}]: to ${target.name}`);
+            logger_1.default.info(`add prop [${prop}]: to ${target.name}`);
         }
     });
     exports.iocContainer.set(target, targetInstance);
