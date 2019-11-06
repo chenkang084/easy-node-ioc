@@ -1,6 +1,4 @@
 import 'reflect-metadata';
-// import { classMap } from './Bootstrap';
-import logger from '../utils/logger';
 import { CONTROL } from './Constants';
 import { controlSet } from '..';
 
@@ -10,13 +8,7 @@ import { controlSet } from '..';
 
 function Injectable(path?: string) {
   return (target: Function | any) => {
-    const targetName = target.name;
-    // TODO class name duplicate
-    // use function as key since map save it by function's pointer
-    // if (!classMap.has(targetName)) {
-    //   logger.info(`=====inject ${targetName}=====`);
-    //   classMap.set(targetName, target);
-    // }
+    // const targetName = target.name;
 
     if (path) {
       Reflect.defineMetadata(CONTROL, path, target);

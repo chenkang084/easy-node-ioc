@@ -9,9 +9,9 @@ import 'multer';
 @Controller('/api/test')
 class TestControl {
   @Autowired
-  testService: TestService;
+  private testService: TestService;
   @Autowired
-  dbService: DbService;
+  private dbService: DbService;
 
   @Get('/index')
   index(@RequestParam('age') age: number, req: Request, res: Response) {
