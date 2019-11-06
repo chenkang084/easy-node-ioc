@@ -37,7 +37,7 @@ function recurInject(target: any) {
 
       // add dependance's instance to target
       targetInstance[prop] = depInstance;
-      logger.info(` add prop [${prop}]: to ${target.name}`);
+      logger.info(`add prop [${prop}]: to ${target.name}`);
     }
 
     // if (depClass.match(control_reg)) {
