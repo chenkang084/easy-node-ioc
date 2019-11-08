@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-export declare const iocContainer: WeakMap<any, any>;
+export declare const iocContainer: WeakMap<Function, any>;
 export declare const controlSet: Set<Function>;
 export declare const serviceSet: Set<Function>;
 export declare const preHandles: Promise<any>[];

@@ -6,12 +6,16 @@ const fs_1 = require("fs");
 const path_1 = require("path");
 const Constants_1 = require("./Constants");
 const logger_1 = tslib_1.__importDefault(require("../utils/logger"));
+const env = (process.env.NODE_ENV && process.env.NODE_ENV.trim()) || 'prod';
 exports.iocContainer = new WeakMap();
 exports.controlSet = new Set();
 exports.serviceSet = new Set();
 exports.preHandles = [];
 const startTime = Date.now();
 function recurInject(target) {
+    if (!target) {
+        return;
+    }
     const targetInstance = new target();
     logger_1.default.info(`instantiate ${target.name}`);
     const depends = Reflect.getOwnMetadataKeys(target).filter((meta) => 'design:paramtypes' !== meta);

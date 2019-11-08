@@ -7,11 +7,9 @@ describe('test easy-node-ioc', () => {
   before(() => {
     serviceSet.clear();
   });
-
   it('test singleton Service/Controller', () => {
     @Service
     class SingleTonService {}
-
     @Controller('/test')
     class TestControl {
       @Autowired

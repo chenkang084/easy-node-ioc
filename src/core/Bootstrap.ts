@@ -1,10 +1,12 @@
 import 'reflect-metadata';
 import { statSync, readdirSync } from 'fs';
-import { join, resolve } from 'path';
+import { join } from 'path';
 import { autowired_reg, CONTROL, RESTFUL, MIDDLEWARE } from './Constants';
 import logger from '../utils/logger';
 
-export const iocContainer = new WeakMap<any, any>();
+const env = (process.env.NODE_ENV && process.env.NODE_ENV.trim()) || 'prod';
+
+export const iocContainer = new WeakMap<Function, any>();
 export const controlSet = new Set<Function>();
 export const serviceSet = new Set<Function>();
 export const preHandles: Promise<any>[] = [];
@@ -12,6 +14,10 @@ export const preHandles: Promise<any>[] = [];
 const startTime = Date.now();
 
 export function recurInject(target: any) {
+  if (!target) {
+    return;
+  }
+
   // instantiate target
   const targetInstance = new target();
   logger.info(`instantiate ${target.name}`);
@@ -40,10 +46,6 @@ export function recurInject(target: any) {
       targetInstance[prop] = depInstance;
       logger.info(`add prop [${prop}]: to ${target.name}`);
     }
-
-    // if (depClass.match(control_reg)) {
-    //   controlSet.add(target);
-    // }
   });
 
   // inject instance to container
@@ -158,17 +160,8 @@ function loadFile(path: string) {
   } else {
     if (path.match(/.*[^\.]+\b\.(t|j)s\b$/)) {
       logger.info(`scan file ${path}`);
-      // excuate file and inject controller to controlSet
+      // excuate file
       require(path);
-      // const constructor = require(path).default;
-      // if (constructor) {
-      //   // TODO: how to instantiate with parameters
-      //   const instance = recurInject(constructor);
-
-      //   console.log(iocContainer);
-      // } else {
-      //   throw new Error('Controller must export a default class.');
-      // }
     }
   }
 }
