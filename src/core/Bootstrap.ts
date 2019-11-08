@@ -71,16 +71,12 @@ export function Bootstrap(target: any) {
       logger.info('execuate preHandle methods done');
     }
 
-    // recurInject(target);
-
     // instantiate app class
     const expressInstance = recurInject(target);
     const { app } = expressInstance;
 
     // loop all control class
     for (const control of controlSet) {
-      // recurInject(control);
-
       // get control instance
       const controlInstance = iocContainer.get(control);
       // get instance's metas
