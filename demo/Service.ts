@@ -1,6 +1,6 @@
 import { Service } from '../src';
 
-@Service()
+@Service
 export default class TestService {
   queryDb() {
     console.log('TestService class queryDb method');

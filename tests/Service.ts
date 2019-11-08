@@ -6,6 +6,10 @@ export default class TestService {
   @Autowired
   private duplicateTestService: DuplicateTestService;
 
+  constructor() {
+    console.log();
+  }
+
   public testSay(): boolean {
     return false;
   }
