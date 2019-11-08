@@ -24,10 +24,12 @@
         "--timeout",
         "999999",
         "--colors",
-        "${workspaceFolder}/tests/**/*.test.ts"
+        // "${workspaceFolder}/tests/**/*.test.ts"
+        "${workspaceFolder}/tests/duplicate.test.ts"
       ],
-      "protocol": "inspector"
-      // "console": "integratedTerminal"
+      "protocol": "inspector",
+      // "console": "integratedTerminal",
+      "env": { "NODE_ENV": "test" }
     }
   ]
 }

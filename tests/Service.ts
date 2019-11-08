@@ -1,8 +1,12 @@
-import { Service } from '../src';
+import { Service, Autowired } from '../src';
+import DuplicateTestService from './DuplicateTestService';
 
 @Service
 export default class TestService {
-  public say(): boolean {
+  @Autowired
+  private duplicateTestService: DuplicateTestService;
+
+  public testSay(): boolean {
     return false;
   }
 }
