@@ -5,12 +5,13 @@ import { autowired_reg, CONTROL, RESTFUL, MIDDLEWARE } from './Constants';
 import logger from '../utils/logger';
 
 export const iocContainer = new WeakMap<any, any>();
-export const controlSet = new Set();
+export const controlSet = new Set<Function>();
+export const serviceSet = new WeakSet<Function>();
 export const preHandles: Promise<any>[] = [];
 
 const startTime = Date.now();
 
-function recurInject(target: any) {
+export function recurInject(target: any) {
   // instantiate target
   const targetInstance = new target();
   logger.info(`instantiate ${target.name}`);
@@ -68,15 +69,17 @@ export function Bootstrap(target: any) {
       logger.info('execuate preHandle methods done');
     }
 
-    recurInject(target);
+    // recurInject(target);
 
     // instantiate app class
-    const expressInstance = iocContainer.get(target);
+    const expressInstance = recurInject(target);
     const { app } = expressInstance;
+
+    console.log(iocContainer, controlSet);
 
     // loop all control class
     for (const control of controlSet) {
-      recurInject(control);
+      // recurInject(control);
 
       // get control instance
       const controlInstance = iocContainer.get(control);
@@ -157,7 +160,17 @@ function loadFile(path: string) {
   } else {
     if (path.match(/.*[^\.]+\b\.(t|j)s\b$/)) {
       logger.info(`scan file ${path}`);
+      // excuate file and inject controller to controlSet
       require(path);
+      // const constructor = require(path).default;
+      // if (constructor) {
+      //   // TODO: how to instantiate with parameters
+      //   const instance = recurInject(constructor);
+
+      //   console.log(iocContainer);
+      // } else {
+      //   throw new Error('Controller must export a default class.');
+      // }
     }
   }
 }

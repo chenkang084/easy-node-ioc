@@ -27,6 +27,7 @@
         "${workspaceFolder}/tests/**/*.ts"
       ],
       "protocol": "inspector"
+      // "console": "integratedTerminal"
     }
   ]
 }

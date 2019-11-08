@@ -3,26 +3,26 @@ Object.defineProperty(exports, "__esModule", { value: true });
 require("reflect-metadata");
 const Constants_1 = require("./Constants");
 const __1 = require("..");
-function Injectable(path) {
+const Bootstrap_1 = require("./Bootstrap");
+exports.Service = (target) => {
+    if (!__1.serviceSet.has(target)) {
+        Bootstrap_1.recurInject(target);
+        __1.serviceSet.add(target);
+    }
+};
+function Controller(path) {
     return (target) => {
         if (path) {
             Reflect.defineMetadata(Constants_1.CONTROL, path, target);
             if (!__1.controlSet.has(target)) {
+                Bootstrap_1.recurInject(target);
                 __1.controlSet.add(target);
             }
         }
+        else {
+            throw new Error(`Controller can't omit the path field.`);
+        }
     };
-}
-function Component() {
-    return Injectable();
-}
-exports.Component = Component;
-function Service() {
-    return Injectable();
-}
-exports.Service = Service;
-function Controller(path) {
-    return Injectable(path);
 }
 exports.Controller = Controller;
 //# sourceMappingURL=ClassInject.js.map
