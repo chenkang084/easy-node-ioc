@@ -24,7 +24,7 @@
         "--timeout",
         "999999",
         "--colors",
-        "${workspaceFolder}/tests/**/*.ts"
+        "${workspaceFolder}/tests/**/*.test.ts"
       ],
       "protocol": "inspector"
       // "console": "integratedTerminal"

@@ -4,7 +4,7 @@
   "description": "Typescript IOC Tool",
   "main": "dist/index.js",
   "scripts": {
-    "test": "mocha --timeout 10000 --require ts-node/register \"./tests/**/*.ts\" ",
+    "test": "mocha --timeout 10000 --require ts-node/register \"./tests/**/*.test.ts\" ",
     "build": "tsc"
   },
   "author": "chenkang084@163.com",

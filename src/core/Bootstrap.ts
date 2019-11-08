@@ -6,7 +6,7 @@ import logger from '../utils/logger';
 
 export const iocContainer = new WeakMap<any, any>();
 export const controlSet = new Set<Function>();
-export const serviceSet = new WeakSet<Function>();
+export const serviceSet = new Set<Function>();
 export const preHandles: Promise<any>[] = [];
 
 const startTime = Date.now();
@@ -74,8 +74,6 @@ export function Bootstrap(target: any) {
     // instantiate app class
     const expressInstance = recurInject(target);
     const { app } = expressInstance;
-
-    console.log(iocContainer, controlSet);
 
     // loop all control class
     for (const control of controlSet) {

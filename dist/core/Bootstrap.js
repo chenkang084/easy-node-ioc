@@ -8,7 +8,7 @@ const Constants_1 = require("./Constants");
 const logger_1 = tslib_1.__importDefault(require("../utils/logger"));
 exports.iocContainer = new WeakMap();
 exports.controlSet = new Set();
-exports.serviceSet = new WeakSet();
+exports.serviceSet = new Set();
 exports.preHandles = [];
 const startTime = Date.now();
 function recurInject(target) {
@@ -44,7 +44,6 @@ function Bootstrap(target) {
             }
             const expressInstance = recurInject(target);
             const { app } = expressInstance;
-            console.log(exports.iocContainer, exports.controlSet);
             for (const control of exports.controlSet) {
                 const controlInstance = exports.iocContainer.get(control);
                 const metas = Reflect.getMetadataKeys(controlInstance);

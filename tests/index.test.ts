@@ -10,6 +10,7 @@ import {
 } from '../src';
 import express = require('express');
 import http = require('http');
+// import TestService from './Service';
 
 describe('test easy-node-ioc', () => {
   before(() => {
@@ -17,51 +18,44 @@ describe('test easy-node-ioc', () => {
     // const controller = require('./Controller');
   });
 
+  it('test inject Controller', () => {
+    @Controller('/test')
+    class TestControl {}
+    const { controlSet } = require('../src/core/Bootstrap');
+    expect(controlSet.has(TestControl)).equal(true);
+  });
+
+  it('test inject Service', () => {
+    @Service
+    class TestService {}
+    const { serviceSet } = require('../src/core/Bootstrap');
+    expect(serviceSet.has(TestService)).equal(true);
+  });
+
+  it('test Autowired', async () => {
+    @Service
+    class AutowiredService {}
+    @Controller('/test')
+    class TestControl {
+      @Autowired
+      private autowiredService: AutowiredService;
+    }
+    const { serviceSet } = require('../src/core/Bootstrap');
+    expect(serviceSet.has(AutowiredService)).equal(true);
+  });
+
   it('test Bootstrap method', () => {
     @Bootstrap
     @ComponentScan(join(__dirname, './Controller.ts'))
     class App {
-      // @Autowired
-      // private testService: TestService;
       app = express();
       main() {
         const server = http.createServer(this.app);
         server.listen(9001, function() {
           console.log('Example app has started.');
-          // server.close();
+          server.close();
         });
       }
     }
   });
-  // it('test inject Controller', () => {
-  //   @Controller('/test')
-  //   class TestControl {}
-  //   const { controlSet } = require('../src/core/Bootstrap');
-  //   expect(controlSet.has(TestControl)).equal(true);
-  // });
-  // it('test inject Service', () => {
-  //   // @Service
-  //   class TestService {}
-  //   @Bootstrap
-  //   class App {
-  //     @Autowired
-  //     private testService: TestService;
-  //     @Autowired
-  //     private testService2: TestService;
-  //   }
-  // });
-  // const { controlSet } = require('../src/core/Bootstrap');
-  // expect(controlSet.has(TestService)).equal(true);
-  // });
-  // it('test Autowired', async () => {
-  //   @Service()
-  //   class TestService {}
-  //   @Controller('/test')
-  //   class TestControl {
-  //     @Autowired
-  //     private testService: TestService;
-  //   }
-  //   const { controlSet } = require('../src/core/Bootstrap');
-  //   expect(controlSet.has(TestControl)).equal(true);
-  // });
 });
