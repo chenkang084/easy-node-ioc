@@ -8,6 +8,7 @@ const Constants_1 = require("./Constants");
 const logger_1 = tslib_1.__importDefault(require("../utils/logger"));
 exports.iocContainer = new WeakMap();
 exports.controlSet = new Set();
+exports.serviceSet = new Set();
 exports.preHandles = [];
 const startTime = Date.now();
 function recurInject(target) {
@@ -29,6 +30,7 @@ function recurInject(target) {
     exports.iocContainer.set(target, targetInstance);
     return targetInstance;
 }
+exports.recurInject = recurInject;
 function Bootstrap(target) {
     (function run() {
         return tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -40,11 +42,9 @@ function Bootstrap(target) {
                 }
                 logger_1.default.info('execuate preHandle methods done');
             }
-            recurInject(target);
-            const expressInstance = exports.iocContainer.get(target);
+            const expressInstance = recurInject(target);
             const { app } = expressInstance;
             for (const control of exports.controlSet) {
-                recurInject(control);
                 const controlInstance = exports.iocContainer.get(control);
                 const metas = Reflect.getMetadataKeys(controlInstance);
                 const restfulMap = Reflect.getMetadata(Constants_1.RESTFUL, controlInstance);
