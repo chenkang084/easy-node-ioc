@@ -110,3 +110,9 @@ class App {
 如果你对`decorator`比较感兴趣，可以查看相关资料，了解 decorator 如何使用。
 
 我建立了一个微信群，如果你对这个小工具感兴趣，可以加群，或者如果你有什么问题，也可以进群交流。
+
+<p align="left">
+  <a href="https://github.com/chenkang084/easy-node-ioc">
+    <img width="200" src="https://raw.githubusercontent.com/chenkang084/easy-node-ioc/master/assets/RQCode.jpeg">
+  </a>
+</p>
