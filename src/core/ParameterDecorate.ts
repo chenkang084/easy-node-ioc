@@ -1,16 +1,8 @@
 import { RESTFUL } from './Constants';
-import {
-  getRestfulMap,
-  getRestfulParameterMap,
-  getRestfulParameterSet
-} from '../utils/common';
+import { getRestfulMap, getRestfulParameterMap, getRestfulParameterSet } from '../utils/common';
 
-export function RequestParam(requestParam: string) {
-  return (
-    target: any,
-    propertyKey: string | symbol,
-    parameterIndex: number
-  ) => {
+function CheckAndSetParameters(paramterName: string, parameterType: string) {
+  return (target: any, propertyKey: string | symbol, parameterIndex: number) => {
     /**
      * bind RESTFUL to instance
      * key    --> method
@@ -24,10 +16,10 @@ export function RequestParam(requestParam: string) {
 
     const methodMap = getRestfulParameterMap(method, restfulMap);
 
-    const parametersSet = getRestfulParameterSet(methodMap, 'query');
-    parametersSet.add(requestParam);
+    const parametersSet = getRestfulParameterSet(methodMap, parameterType);
+    parametersSet.add(paramterName);
 
-    methodMap.set('query', parametersSet);
+    methodMap.set(parameterType, parametersSet);
 
     if (!restfulMap.has(method)) {
       restfulMap.set(method, methodMap);
@@ -38,68 +30,18 @@ export function RequestParam(requestParam: string) {
   };
 }
 
-export function PathVariable(requestParam: string) {
-  return (
-    target: any,
-    propertyKey: string | symbol,
-    parameterIndex: number
-  ) => {
-    /**
-     * bind RESTFUL to instance
-     * key    --> method
-     * value  --> Map
-     *                key   --> parameters
-     *                value --> set
-     */
-
-    const restfulMap = getRestfulMap(`${RESTFUL}`, target);
-    const method = target[propertyKey];
-
-    const methodMap = getRestfulParameterMap(method, restfulMap);
-
-    const parametersSet = getRestfulParameterSet(methodMap, 'params');
-    parametersSet.add(requestParam);
-
-    methodMap.set('params', parametersSet);
-
-    if (!restfulMap.has(method)) {
-      restfulMap.set(method, methodMap);
-    }
-
-    // define or overwrite RESTFUL map
-    Reflect.defineMetadata(RESTFUL, restfulMap, target);
-  };
+export function RequestParam(paramterName: string) {
+  return CheckAndSetParameters(paramterName, 'query');
 }
 
-export function Body(propName: string) {
-  return (
-    target: any,
-    propertyKey: string | symbol,
-    parameterIndex: number
-  ) => {
-    /**
-     * bind RESTFUL to instance
-     * key    --> method
-     * value  --> Map
-     *                key   --> parameters
-     *                value --> set
-     */
+export function PathVariable(paramterName: string) {
+  return CheckAndSetParameters(paramterName, 'params');
+}
 
-    const restfulMap = getRestfulMap(`${RESTFUL}`, target);
-    const method = target[propertyKey];
+export function Body(paramterName: string) {
+  return CheckAndSetParameters(paramterName, 'body');
+}
 
-    const methodMap = getRestfulParameterMap(method, restfulMap);
-
-    const bodySet = getRestfulParameterSet(methodMap, 'body');
-    bodySet.add(propName);
-
-    methodMap.set('body', bodySet);
-
-    if (!restfulMap.has(method)) {
-      restfulMap.set(method, methodMap);
-    }
-
-    // define or overwrite RESTFUL map
-    Reflect.defineMetadata(RESTFUL, restfulMap, target);
-  };
+export function RequestBody(paramterName: string) {
+  return CheckAndSetParameters(paramterName, 'RequestBody');
 }
