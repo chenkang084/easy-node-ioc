@@ -23,9 +23,7 @@ export function recurInject(target: any) {
   logger.info(`instantiate ${target.name}`);
 
   // get the dependance of target
-  const depends = Reflect.getOwnMetadataKeys(target).filter(
-    (meta: string) => 'design:paramtypes' !== meta
-  );
+  const depends = Reflect.getOwnMetadataKeys(target).filter((meta: string) => 'design:paramtypes' !== meta);
 
   // iterator dependance
   depends.forEach((depClass: string) => {
@@ -86,14 +84,15 @@ export function Bootstrap(target: any) {
       const controlPath = Reflect.getMetadata(CONTROL, control);
 
       Object.getOwnPropertyNames(controlInstance.__proto__)
-        .filter(name => name !== 'constructor')
-        .forEach(methodName => {
+        .filter((name) => name !== 'constructor')
+        .forEach((methodName) => {
           const method = controlInstance[methodName];
           const parameterMap = restfulMap.get(method);
           const methodPath = parameterMap.get('path');
           const querySet = parameterMap.get('query');
           const paramsSet = parameterMap.get('params') as Set<string>;
           const bodySet = parameterMap.get('body') as Set<string>;
+          const requestBodySet = parameterMap.get('RequestBody') as Set<string>;
           const methodType = parameterMap.get('methodType');
           const args = parameterMap.get('args');
           const middleWareSet = parameterMap.get(MIDDLEWARE);
@@ -109,14 +108,15 @@ export function Bootstrap(target: any) {
               if (bodySet && bodySet.has(arg)) {
                 return req.body[arg];
               }
+
+              if (requestBodySet && requestBodySet.has(arg)) {
+                return req.body;
+              }
             });
 
             // catch promise error
             try {
-              await method.apply(
-                controlInstance,
-                parametersVals.concat([req, res, next])
-              );
+              await method.apply(controlInstance, parametersVals.concat([req, res, next]));
             } catch (error) {
               logger.error(error);
               res.status(500).send(error && error.message);
@@ -125,11 +125,7 @@ export function Bootstrap(target: any) {
 
           // has middlewares, apply middlewares
           if (middleWareSet) {
-            app[methodType](
-              controlPath + methodPath,
-              Array.from(middleWareSet),
-              handleRequest
-            );
+            app[methodType](controlPath + methodPath, Array.from(middleWareSet), handleRequest);
           } else {
             app[methodType](controlPath + methodPath, handleRequest);
           }
@@ -164,7 +160,7 @@ function loadFile(path: string) {
 
 export function ComponentScan(scanPath: string) {
   if (scanPath) {
-    scanPath.split(',').forEach(path => {
+    scanPath.split(',').forEach((path) => {
       loadFile(path);
     });
   }

@@ -25,7 +25,7 @@
         "999999",
         "--colors",
         // "${workspaceFolder}/tests/**/*.test.ts"
-        "${workspaceFolder}/tests/duplicate.test.ts"
+        "${workspaceFolder}/tests/controller.params.test.ts"
       ],
       "protocol": "inspector",
       // "console": "integratedTerminal",

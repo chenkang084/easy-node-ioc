@@ -3,7 +3,7 @@ import { Request, Response, NextFunction } from 'express';
 import TestService from './Service';
 import DbService from './DbService';
 import { Get, Multer, Post } from '../src/core/MethodInject';
-import { RequestParam, PathVariable } from '../src/core/ParameterDecorate';
+import { RequestParam, PathVariable, RequestBody, Body } from '../src/core/ParameterDecorate';
 import 'multer';
 
 @Controller('/api/test')
@@ -46,5 +46,10 @@ class TestControl {
     } else {
       res.status(400).json({ errorMsg: `The fields of file can't be null` });
     }
+  }
+
+  @Post('/test-requestBody')
+  testRequestBody(@RequestBody('user') user: any, @Body('name') name: any, req: Request, res: Response) {
+    res.send(user);
   }
 }

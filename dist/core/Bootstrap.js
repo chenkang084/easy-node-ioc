@@ -54,14 +54,15 @@ function Bootstrap(target) {
                 const restfulMap = Reflect.getMetadata(Constants_1.RESTFUL, controlInstance);
                 const controlPath = Reflect.getMetadata(Constants_1.CONTROL, control);
                 Object.getOwnPropertyNames(controlInstance.__proto__)
-                    .filter(name => name !== 'constructor')
-                    .forEach(methodName => {
+                    .filter((name) => name !== 'constructor')
+                    .forEach((methodName) => {
                     const method = controlInstance[methodName];
                     const parameterMap = restfulMap.get(method);
                     const methodPath = parameterMap.get('path');
                     const querySet = parameterMap.get('query');
                     const paramsSet = parameterMap.get('params');
                     const bodySet = parameterMap.get('body');
+                    const requestBodySet = parameterMap.get('RequestBody');
                     const methodType = parameterMap.get('methodType');
                     const args = parameterMap.get('args');
                     const middleWareSet = parameterMap.get(Constants_1.MIDDLEWARE);
@@ -75,6 +76,9 @@ function Bootstrap(target) {
                             }
                             if (bodySet && bodySet.has(arg)) {
                                 return req.body[arg];
+                            }
+                            if (requestBodySet && requestBodySet.has(arg)) {
+                                return req.body;
                             }
                         });
                         try {
@@ -117,7 +121,7 @@ function loadFile(path) {
 }
 function ComponentScan(scanPath) {
     if (scanPath) {
-        scanPath.split(',').forEach(path => {
+        scanPath.split(',').forEach((path) => {
             loadFile(path);
         });
     }

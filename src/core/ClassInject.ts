@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import { CONTROL, SERVICE } from './Constants';
+import { CONTROL } from './Constants';
 import { controlSet, serviceSet } from '..';
 import { recurInject } from './Bootstrap';
 
