@@ -1,9 +1,5 @@
 import { RESTFUL, RestfulMethodType, MIDDLEWARE } from './Constants';
-import {
-  getRestfulMap,
-  getRestfulParameterMap,
-  getFunctionParams
-} from '../utils/common';
+import { getRestfulMap, getRestfulParameterMap, getFunctionParams } from '../utils/common';
 import multer from 'multer';
 
 const upload = multer();
@@ -28,11 +24,7 @@ export function Patch(path: string) {
 }
 
 function handleRequest(reqType: RestfulMethodType, path: string) {
-  return function(
-    target: any,
-    propertyKey: string | symbol,
-    descriptor: PropertyDescriptor
-  ) {
+  return function(target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
     /**
      * bind RESTFUL to instance
      * key    --> method
@@ -48,12 +40,7 @@ function handleRequest(reqType: RestfulMethodType, path: string) {
 
     methodMap.set('path', path);
     methodMap.set('methodType', reqType);
-    methodMap.set(
-      'args',
-      getFunctionParams(method).filter(
-        arg => !['req', 'res', 'next'].includes(arg)
-      )
-    );
+    methodMap.set('args', getFunctionParams(method).filter((arg) => !['req', 'res', 'next'].includes(arg)));
 
     if (!restfulMap.has(method)) {
       restfulMap.set(method, methodMap);
@@ -64,11 +51,7 @@ function handleRequest(reqType: RestfulMethodType, path: string) {
   };
 }
 
-export function Multer(
-  target: any,
-  propertyKey: string | symbol,
-  descriptor: PropertyDescriptor
-) {
+function handleAddMiddleWareFn(target: any, propertyKey: string | symbol, middlewareFn: Function) {
   const restfulMap = getRestfulMap(`${RESTFUL}`, target);
   const method = target[propertyKey];
 
@@ -80,7 +63,7 @@ export function Multer(
     middleWareSet = new Set();
   }
 
-  middleWareSet.add(upload.any());
+  middleWareSet.add(middlewareFn);
   methodMap.set(MIDDLEWARE, middleWareSet);
 
   if (!restfulMap.has(method)) {
@@ -88,4 +71,14 @@ export function Multer(
   }
 
   Reflect.defineMetadata(RESTFUL, restfulMap, target);
+}
+
+export function Multer(target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) {
+  handleAddMiddleWareFn(target, propertyKey, upload.any());
+}
+
+export function MiddleWare(middleFn: Function) {
+  return (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => {
+    handleAddMiddleWareFn(target, propertyKey, middleFn);
+  };
 }

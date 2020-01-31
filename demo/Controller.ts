@@ -2,7 +2,7 @@ import { Controller, Autowired } from '../src';
 import { Request, Response, NextFunction } from 'express';
 import TestService from './Service';
 import DbService from './DbService';
-import { Get, Multer, Post } from '../src/core/MethodInject';
+import { Get, Multer, Post, MiddleWare } from '../src/core/MethodInject';
 import { RequestParam, PathVariable, RequestBody, Body } from '../src/core/ParameterDecorate';
 import 'multer';
 
@@ -49,6 +49,10 @@ class TestControl {
   }
 
   @Post('/test-requestBody')
+  @MiddleWare((req: any, res: any, next: any) => {
+    console.log('test middleware');
+    next();
+  })
   testRequestBody(@RequestBody('user') user: any, @Body('name') name: any, req: Request, res: Response) {
     res.send(user);
   }
