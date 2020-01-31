@@ -32,14 +32,14 @@ function handleRequest(reqType, path) {
         const methodMap = common_1.getRestfulParameterMap(method, restfulMap);
         methodMap.set('path', path);
         methodMap.set('methodType', reqType);
-        methodMap.set('args', common_1.getFunctionParams(method).filter(arg => !['req', 'res', 'next'].includes(arg)));
+        methodMap.set('args', common_1.getFunctionParams(method).filter((arg) => !['req', 'res', 'next'].includes(arg)));
         if (!restfulMap.has(method)) {
             restfulMap.set(method, methodMap);
         }
         Reflect.defineMetadata(Constants_1.RESTFUL, restfulMap, target);
     };
 }
-function Multer(target, propertyKey, descriptor) {
+function handleAddMiddleWareFn(target, propertyKey, middlewareFn) {
     const restfulMap = common_1.getRestfulMap(`${Constants_1.RESTFUL}`, target);
     const method = target[propertyKey];
     const methodMap = common_1.getRestfulParameterMap(method, restfulMap);
@@ -47,12 +47,21 @@ function Multer(target, propertyKey, descriptor) {
     if (!middleWareSet) {
         middleWareSet = new Set();
     }
-    middleWareSet.add(upload.any());
+    middleWareSet.add(middlewareFn);
     methodMap.set(Constants_1.MIDDLEWARE, middleWareSet);
     if (!restfulMap.has(method)) {
         restfulMap.set(method, methodMap);
     }
     Reflect.defineMetadata(Constants_1.RESTFUL, restfulMap, target);
 }
+function Multer(target, propertyKey, descriptor) {
+    handleAddMiddleWareFn(target, propertyKey, upload.any());
+}
 exports.Multer = Multer;
+function MiddleWare(middleFn) {
+    return (target, propertyKey, descriptor) => {
+        handleAddMiddleWareFn(target, propertyKey, middleFn);
+    };
+}
+exports.MiddleWare = MiddleWare;
 //# sourceMappingURL=MethodInject.js.map

@@ -4,3 +4,4 @@ export declare function Put(path: string): (target: any, propertyKey: string | s
 export declare function Delete(path: string): (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => void;
 export declare function Patch(path: string): (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => void;
 export declare function Multer(target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor): void;
+export declare function MiddleWare(middleFn: Function): (target: any, propertyKey: string | symbol, descriptor: PropertyDescriptor) => void;
