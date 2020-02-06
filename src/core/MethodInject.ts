@@ -39,8 +39,10 @@ function handleRequest(reqType: RestfulMethodType, path: string) {
     const methodMap = getRestfulParameterMap(method, restfulMap);
 
     methodMap.set('path', path);
-    methodMap.set('methodType', reqType);
     methodMap.set('args', getFunctionParams(method).filter((arg) => !['req', 'res', 'next'].includes(arg)));
+
+    const methodTypeSet: Set<string> = methodMap.get('methodTypeSet') || new Set<string>();
+    methodMap.set('methodTypeSet', methodTypeSet.add(reqType));
 
     if (!restfulMap.has(method)) {
       restfulMap.set(method, methodMap);

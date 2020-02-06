@@ -93,7 +93,7 @@ export function Bootstrap(target: any) {
           const paramsSet = parameterMap.get('params') as Set<string>;
           const bodySet = parameterMap.get('body') as Set<string>;
           const requestBodySet = parameterMap.get('RequestBody') as Set<string>;
-          const methodType = parameterMap.get('methodType');
+          const methodTypeSet = parameterMap.get('methodTypeSet');
           const args = parameterMap.get('args');
           const middleWareSet = parameterMap.get(MIDDLEWARE);
 
@@ -123,12 +123,14 @@ export function Bootstrap(target: any) {
             }
           };
 
-          // has middlewares, apply middlewares
-          if (middleWareSet) {
-            app[methodType](controlPath + methodPath, Array.from(middleWareSet), handleRequest);
-          } else {
-            app[methodType](controlPath + methodPath, handleRequest);
-          }
+          [...methodTypeSet].forEach((methodType: string) => {
+            // has middlewares, apply middlewares
+            if (middleWareSet) {
+              app[methodType](controlPath + methodPath, Array.from(middleWareSet), handleRequest);
+            } else {
+              app[methodType](controlPath + methodPath, handleRequest);
+            }
+          });
         });
     }
 

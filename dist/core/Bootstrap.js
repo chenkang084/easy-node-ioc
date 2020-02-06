@@ -63,7 +63,7 @@ function Bootstrap(target) {
                     const paramsSet = parameterMap.get('params');
                     const bodySet = parameterMap.get('body');
                     const requestBodySet = parameterMap.get('RequestBody');
-                    const methodType = parameterMap.get('methodType');
+                    const methodTypeSet = parameterMap.get('methodTypeSet');
                     const args = parameterMap.get('args');
                     const middleWareSet = parameterMap.get(Constants_1.MIDDLEWARE);
                     const handleRequest = (req, res, next) => tslib_1.__awaiter(this, void 0, void 0, function* () {
@@ -89,12 +89,14 @@ function Bootstrap(target) {
                             res.status(500).send(error && error.message);
                         }
                     });
-                    if (middleWareSet) {
-                        app[methodType](controlPath + methodPath, Array.from(middleWareSet), handleRequest);
-                    }
-                    else {
-                        app[methodType](controlPath + methodPath, handleRequest);
-                    }
+                    [...methodTypeSet].forEach((methodType) => {
+                        if (middleWareSet) {
+                            app[methodType](controlPath + methodPath, Array.from(middleWareSet), handleRequest);
+                        }
+                        else {
+                            app[methodType](controlPath + methodPath, handleRequest);
+                        }
+                    });
                 });
             }
             logger_1.default.info('instantaiate all class completely.');

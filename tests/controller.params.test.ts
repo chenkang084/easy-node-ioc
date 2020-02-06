@@ -4,7 +4,7 @@ import express = require('express');
 import bodyParser = require('body-parser');
 import http = require('http');
 import { Request, Response, NextFunction } from 'express';
-import { Controller, RequestParam, Post, Bootstrap, RequestBody, Body, Get, PathVariable } from '../src';
+import { Controller, RequestParam, Post, Bootstrap, RequestBody, Body, Get, PathVariable, Put, Delete } from '../src';
 const axios = require('axios');
 
 describe('test paramters of Controller in easy-node-ioc', () => {
@@ -29,6 +29,14 @@ describe('test paramters of Controller in easy-node-ioc', () => {
       @Post('/test-Body')
       testBody(@Body('name') name: any, req: Request, res: Response) {
         res.send(name);
+      }
+
+      @Get('/test-multiple-method')
+      @Post('/test-multiple-method')
+      @Put('/test-multiple-method')
+      @Delete('/test-multiple-method')
+      testMultipleMethod(req: Request, res: Response) {
+        res.sendStatus(200);
       }
     }
 
@@ -83,5 +91,14 @@ describe('test paramters of Controller in easy-node-ioc', () => {
     const { data } = await axios.post('http://localhost:9002/test/test-PathVariable/uuid123');
 
     expect(data).equals('uuid123');
+  });
+
+  it('test multiple method of Controller', async () => {
+    await axios.get('http://localhost:9002/test/test-multiple-method');
+    await axios.post('http://localhost:9002/test/test-multiple-method');
+    await axios.put('http://localhost:9002/test/test-multiple-method');
+    await axios.delete('http://localhost:9002/test/test-multiple-method');
+
+    expect(true);
   });
 });
