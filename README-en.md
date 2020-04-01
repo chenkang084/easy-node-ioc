@@ -102,4 +102,5 @@ Try to call `http://localhost:9001/api/test/index` .
 
 ## TODO List
 
+add create-easy-node-ioc project client
 support swagger-ui
