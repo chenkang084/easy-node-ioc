@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.middleWare_reg = exports.MIDDLEWARE = exports.restful_reg = exports.RESTFUL = exports.autowired_reg = exports.AUTOWIRED = exports.SERVICE = exports.control_reg = exports.CONTROL = void 0;
 exports.CONTROL = '@@CONTROL';
 exports.control_reg = new RegExp(`^${exports.CONTROL}`);
 exports.SERVICE = '@@SERVICE';

@@ -87,7 +87,7 @@ class App {
   main() {
     const server = http.createServer(this.app);
 
-    server.listen(9001, function() {
+    server.listen(9001, function () {
       console.log('Example app listening at http://%s:%s');
     });
   }
@@ -116,3 +116,7 @@ class App {
     <img width="200" src="https://raw.githubusercontent.com/chenkang084/easy-node-ioc/master/assets/RQCode.jpeg">
   </a>
 </p>
+
+## TODO
+
+用 uuid 作为 key，重新定义 iocContainer ,重新组织 key --> instance

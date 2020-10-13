@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.RequestBody = exports.Body = exports.PathVariable = exports.RequestParam = void 0;
 const Constants_1 = require("./Constants");
 const common_1 = require("../utils/common");
 function CheckAndSetParameters(paramterName, parameterType) {

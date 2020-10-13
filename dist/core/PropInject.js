@@ -1,5 +1,6 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
+exports.Autowired = void 0;
 require("reflect-metadata");
 const Constants_1 = require("./Constants");
 function Autowired(target, propKey) {
